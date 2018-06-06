@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.egakat</groupId>
+	<artifactId>egakat-integration</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>egakat-integration</name>
+	<description>Multimodule project with integration functionality</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.1.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<poi.version>3.17</poi.version>
+		<org.apache.any23.version>2.0</org.apache.any23.version>
+		<commons.text.version>1.1</commons.text.version>
+		<commons.lang3.version>3.7</commons.lang3.version>
+		<egakat.core.version>0.0.1-SNAPSHOT</egakat.core.version>
+		<egakat.connect.version>0.0.1-SNAPSHOT</egakat.connect.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml-schemas</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-scratchpad</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.any23</groupId>
+				<artifactId>apache-any23-encoding</artifactId>
+				<version>${org.apache.any23.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-text</artifactId>
+				<version>${commons.text.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons.lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microsoft.sqlserver</groupId>
+				<artifactId>mssql-jdbc</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-core-configuration</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-core-domain</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-core-data-jpa</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-core-services</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-core-web-api</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-core-web-client</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-commons-domain</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-commons-dto</artifactId>
+				<version>${egakat.core.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<modules>
+		<module>egakat-integration-files-commons</module>
+
+		<module>egakat-integration-core-files</module>
+		<module>egakat-integration-core-transformation</module>
+
+		<module>egakat-integration-maps</module>
+		<module>egakat-integration-maps-client</module>
+		<module>egakat-integration-maps-dto</module>
+
+		<module>egakat-integration-files</module>
+		<module>egakat-integration-files-client</module>
+		<module>egakat-integration-files-dto</module>
+
+		<module>egakat-integration-files-watcher</module>
+	</modules>
+</project>
