@@ -71,7 +71,7 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	}
 
 	@Override
-	final public void transformar(Long archivoId) {
+	public void transformar(Long archivoId) {
 		val archivo = getArchivoService().findOneById(archivoId);
 		val campos = getTipoArchivoLocalService().findAllCamposByTipoArchivo(archivo.getIdTipoArchivo());
 		val errores = new ArrayList<ArchivoErrorDto>();
