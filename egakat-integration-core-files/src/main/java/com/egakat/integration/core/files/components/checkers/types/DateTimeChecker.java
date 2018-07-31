@@ -1,7 +1,8 @@
 package com.egakat.integration.core.files.components.checkers.types;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -12,25 +13,33 @@ import com.egakat.integration.files.enums.DatoType;
 
 import lombok.val;
 
-public class DateTimeChecker extends DataTypeChecker<ChronoLocalDate> {
+public class DateTimeChecker extends DataTypeChecker<ChronoLocalDateTime<?>> {
 	@Override
-	protected ChronoLocalDate parse(CampoDto campo, String valor) {
+	protected ChronoLocalDateTime<?> parse(CampoDto campo, String valor) {
 		DateTimeFormatter formatter = campo.getDateTimeFormatter();
 		try {
-			val result = LocalDateTime.parse(valor, formatter).toLocalDate();
+			val temporalAccessor = formatter.parseBest(valor, LocalDateTime::from, LocalDate::from);
+
+			LocalDateTime result;
+			if (temporalAccessor instanceof LocalDateTime) {
+				result = (LocalDateTime) temporalAccessor;
+			} else {
+				result = ((LocalDate) temporalAccessor).atStartOfDay();
+			}
 			return result;
+
 		} catch (DateTimeParseException e) {
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	protected List<CampoChecker<ChronoLocalDate>> getCheckers() {
+	protected List<CampoChecker<ChronoLocalDateTime<?>>> getCheckers() {
 		val result = super.getCheckers();
-		result.add(new DateMinChecker());
-		result.add(new DateMaxChecker());
-		result.add(new DateMinNumeroDeDiasChecker());
-		result.add(new DateMaxNumeroDeDiasChecker());
+		result.add(new DateTimeMinChecker());
+		result.add(new DateTimeMaxChecker());
+		result.add(new DateTimeMinNumeroDeDiasChecker());
+		result.add(new DateTimeMaxNumeroDeDiasChecker());
 		return result;
 	}
 

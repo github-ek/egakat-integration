@@ -135,10 +135,16 @@ public abstract class MapEntidadDecorator<T extends IdentifiedDomainObject<ID>, 
 		val optional = getCampo(archivo, campo);
 		if (optional.isPresent()) {
 			val valor = registro.getDatos().get(optional.get().getCodigo());
-			val format = optional.get().getDateTimeFormatter();
+			val formatter = optional.get().getDateTimeFormatter();
 
 			if (!StringUtils.isEmpty(valor)) {
-				result = LocalDateTime.parse(valor, format);
+				val temporalAccessor = formatter.parseBest(valor, LocalDateTime::from, LocalDate::from);
+
+				if (temporalAccessor instanceof LocalDateTime) {
+					result = (LocalDateTime) temporalAccessor;
+				} else {
+					result = ((LocalDate) temporalAccessor).atStartOfDay();
+				}
 			}
 		}
 		return result;

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.egakat.integration.core.files.components.Constantes;
 import com.egakat.integration.core.files.components.decorators.CamposSplitterDecorator;
@@ -46,6 +47,7 @@ import com.egakat.integration.files.service.api.ArchivoCrudService;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional(readOnly = true)
 @Slf4j
 public abstract class InputServiceImpl<T extends Registro> implements InputService<T> {
 
@@ -238,6 +240,7 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 	// -- CARGAR
 	// -----------------------------------------------------------------------------------------------------------
 
+	@Transactional(readOnly = false)
 	protected EtlRequestDto<T, Long> cargar(EtlRequestDto<T, Long> request) {
 		val registros = request.getRegistros();
 		Validate.notEmpty(registros, "El archivo no contiene registros validos.");

@@ -28,11 +28,17 @@ public class DecimalChecker extends DataTypeChecker<BigDecimal> {
 		DecimalFormat formatter = campo.getDecimalFormat();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(formatter.format(-123.123456));
+		sb.append(formatter.format(-1234567.123456));
 		sb.append(";");
-		sb.append(formatter.format(123.123456));
+		sb.append(formatter.format(1234567.123456));
+		sb.append(";");
+		sb.append(formatter.format(1234567));
+		sb.append(";");
+		sb.append(formatter.format(1234));
 		sb.append(";");
 		sb.append(formatter.format(123));
+		sb.append(";");
+		sb.append(formatter.format(0));
 		sb.append(";");
 		sb.append(formatter.format(0.123456));
 

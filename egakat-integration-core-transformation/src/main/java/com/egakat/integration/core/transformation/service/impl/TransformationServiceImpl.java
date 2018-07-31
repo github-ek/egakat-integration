@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.egakat.integration.core.transformation.service.api.TransformationService;
 import com.egakat.integration.files.client.service.api.TipoArchivoLocalService;
@@ -33,6 +34,7 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Transactional(readOnly = true)
 public abstract class TransformationServiceImpl<T extends Registro> implements TransformationService<T> {
 
 	protected List<EstadoRegistroType> ESTADOS_REGISTROS = asList(ESTRUCTURA_VALIDA, CORREGIDO);
@@ -99,8 +101,8 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 			validateGroups(registros, errores, campos);
 			discard(registros);
 
-			log.debug("getRepository().save");
-			getRepository().saveAll(registros);
+			log.debug("saveRows");
+			saveRows(registros);
 		} catch (RuntimeException e) {
 			errores.add(ArchivoErrorDto.error(archivoId, e));
 		} finally {
@@ -112,28 +114,21 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	// BEFORE TRANSLATE RECORDS
 	// -------------------------------------------------------------------------------------
 	final protected void beforeTranslateRows(List<T> registros, List<ArchivoErrorDto> errores, List<CampoDto> campos) {
-		registros.parallelStream().forEach(registro -> {
-			switch (registro.getEstado()) {
-			case PROCESADO:
-			case DESCARTADO:
-				return;
-			default:
-				break;
-			}
 
+		registros.parallelStream().filter(registro -> filter(registro)).forEach(registro -> {
 			boolean success = true;
+
 			try {
 				success &= beforeTranslateRow(registro, errores, campos);
 			} catch (RuntimeException e) {
-				val error = ArchivoErrorDto.error(registro.getIdArchivo(), e, registro.getNumeroLinea(),
-						registro.toString());
-				errores.add(error);
+				error(registro, errores, e);
 				success = false;
 			}
 
 			if (!success) {
 				registro.setEstado(ERROR_ENRIQUECIMIENTO);
 			}
+
 		});
 	}
 
@@ -141,31 +136,15 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	// TRANSLATE RECORDS
 	// -------------------------------------------------------------------------------------
 	final protected void translateRows(List<T> registros, List<ArchivoErrorDto> errores, List<CampoDto> campos) {
-		// @formatter:off
-		val camposHomologables = campos
-				.stream()
-				.filter(a -> a.getOrdinalTransformacion() > 0)
-				.sorted((a,b) -> a.getOrdinalTransformacion().compareTo(b.getOrdinalTransformacion()))
-				.collect(Collectors.toList());
-		// @formatter:on
+		val camposHomologables = getCamposHomologables(campos);
 
-		registros.parallelStream().forEach(registro -> {
-			switch (registro.getEstado()) {
-			case PROCESADO:
-			case DESCARTADO:
-			case ERROR_ENRIQUECIMIENTO:
-				return;
-			default:
-				break;
-			}
-
+		registros.parallelStream().filter(registro -> filter(registro)).forEach(registro -> {
 			boolean success = true;
+			log.debug("linea={}:{}", registro.getNumeroLinea(), registro.toString());
 			try {
 				success &= translateRow(registro, errores, camposHomologables);
 			} catch (RuntimeException e) {
-				val error = ArchivoErrorDto.error(registro.getIdArchivo(), e, registro.getNumeroLinea(),
-						registro.toString());
-				errores.add(error);
+				error(registro, errores, e);
 				success = false;
 			}
 
@@ -177,19 +156,28 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 		});
 	}
 
+	protected List<CampoDto> getCamposHomologables(List<CampoDto> campos) {
+		// @formatter:off
+		val result = campos.stream()
+				.filter(a -> a.getOrdinalTransformacion() > 0)
+				.sorted((a,b) -> a.getOrdinalTransformacion().compareTo(b.getOrdinalTransformacion()))
+				.collect(Collectors.toList());
+		// @formatter:on
+
+		return result;
+	}
+
 	final protected boolean translateRow(T registro, List<ArchivoErrorDto> errores, List<CampoDto> campos) {
 		boolean result = true;
 
 		for (val campo : campos) {
 			boolean success = true;
 			try {
-				val codigo = registro.getHomologablePropertyValue(campo.getCodigo());
-				val value = getValueFromMapOrDefault(campo, codigo);
+				val key = registro.getHomologablePropertyValue(campo.getCodigo());
+				val value = getValueFromMapOrDefault(campo, key);
 				translateField(registro, campo, value);
 			} catch (RuntimeException e) {
-				val error = ArchivoErrorDto.error(registro.getIdArchivo(), e, registro.getNumeroLinea(),
-						registro.toString());
-				errores.add(error);
+				error(registro, errores, e);
 				success = false;
 			}
 
@@ -199,13 +187,13 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 		return result;
 	}
 
-	final protected String getValueFromMapOrDefault(CampoDto campo, String codigo) {
-		String result = codigo;
+	final protected String getValueFromMapOrDefault(CampoDto campo, String key) {
+		String result = key;
 		val id = campo.getIdMapa();
 		if (id != null) {
-			result = getMapaLocalService().findMapaValorByMapaIdAndMapaClave(id, codigo);
+			result = getMapaLocalService().findMapaValorByMapaIdAndMapaClave(id, key);
 			if (result == null) {
-				result = codigo;
+				result = key;
 			}
 		}
 		return result;
@@ -215,24 +203,14 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	// BEFORE VALIDATE RECORDS
 	// -------------------------------------------------------------------------------------
 	final protected void beforeValidateRows(List<T> registros, List<ArchivoErrorDto> errores, List<CampoDto> campos) {
-		registros.parallelStream().forEach(registro -> {
-			switch (registro.getEstado()) {
-			case PROCESADO:
-			case DESCARTADO:
-			case ERROR_ENRIQUECIMIENTO:
-			case ERROR_HOMOLOGACION:
-				return;
-			default:
-				break;
-			}
 
+		registros.parallelStream().filter(registro -> filter(registro)).forEach(registro -> {
 			boolean success = true;
+
 			try {
 				success &= beforeValidateRow(registro, errores, campos);
 			} catch (RuntimeException e) {
-				val error = ArchivoErrorDto.error(registro.getIdArchivo(), e, registro.getNumeroLinea(),
-						registro.toString());
-				errores.add(error);
+				error(registro, errores, e);
 				success = false;
 			}
 
@@ -246,27 +224,16 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	// VALIDATE ROWS
 	// -------------------------------------------------------------------------------------
 	final protected void validateRows(List<T> registros, List<ArchivoErrorDto> errores, List<CampoDto> campos) {
-		val requeridos = campos.stream().filter(a -> !a.isIgnorar() && a.isObligatorioValidacion()).collect(toList());
+		val camposRequeridos = campos.stream().filter(a -> !a.isIgnorar() && a.isObligatorioValidacion())
+				.collect(toList());
 
-		registros.parallelStream().forEach(registro -> {
-			switch (registro.getEstado()) {
-			case PROCESADO:
-			case DESCARTADO:
-			case ERROR_ENRIQUECIMIENTO:
-			case ERROR_HOMOLOGACION:
-				return;
-			default:
-				break;
-			}
-
+		registros.parallelStream().filter(registro -> filter(registro)).forEach(registro -> {
 			boolean success = true;
 			try {
-				success &= validateRequiredFields(registro, errores, requeridos);
+				success &= validateRequiredFields(registro, errores, camposRequeridos);
 				success &= validateRow(registro, errores, campos);
 			} catch (RuntimeException e) {
-				val error = ArchivoErrorDto.error(registro.getIdArchivo(), e, registro.getNumeroLinea(),
-						registro.toString());
-				errores.add(error);
+				error(registro, errores, e);
 				success = false;
 			}
 
@@ -282,62 +249,86 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 		boolean success = true;
 
 		for (val campo : campos) {
-			boolean isNullOrEmpty;
-
-			if (campo.getIdMapa() == null && campo.getOrdinalTransformacion() == 0) {
-				isNullOrEmpty = registro.propertyIsNullOrEmpty(campo.getCodigo());
-			} else {
-				boolean propertyHasBeenHomologated = registro.propertyHasBeenHomologated(campo.getCodigo());
-				if (propertyHasBeenHomologated) {
-					isNullOrEmpty = false;
-				} else {
-					isNullOrEmpty = true;
-				}
-			}
+			boolean isNullOrEmpty = propertyIsNullOrEmpty(registro, campo);
 
 			if (isNullOrEmpty) {
-				val sb = new StringBuilder();
-
-				String valor;
-				if (campo.getOrdinalTransformacion() == 0) {
-					valor = String.valueOf(registro.getObjectValueFromProperty(campo.getCodigo()));
-				} else {
-					valor = registro.getHomologablePropertyValue(campo.getCodigo());
-				}
-
-				sb.append(campo.getCodigo()).append(":");
-
-				if (StringUtils.isEmpty(valor)) {
-					sb.append("Este campo no admite valores vacíos.");
-				} else {
-					if (campo.getOrdinalTransformacion() == 0) {
-						if (campo.getIdMapa() != null) {
-							val format = "Este campo tiene asociado el mapa de homologación con id=%d .Verifique que el valor [%s] exista en dicho mapa.";
-							sb.append(String.format(format, campo.getIdMapa(), valor));
-						} else {
-							sb.append(String.format(
-									"Este campo contiene el valor [%s], pero no pudo ser homologado a un dato valido.",
-									valor));
-						}
-					} else {
-						sb.append(String.format("Este campo no admite el valor [%s].", valor));
-					}
-				}
-
-				val error = ArchivoErrorDto.error(registro.getIdArchivo(), sb.toString(), registro.getNumeroLinea(),
-						registro.toString());
-				errores.add(error);
+				errorPropertyIsRequiredButValueIsNullOrEmpty(registro, errores, campo);
 				success = false;
 			}
 		}
 		return success;
 	}
-	
+
+	protected boolean propertyIsNullOrEmpty(T registro, final com.egakat.integration.files.dto.CampoDto campo) {
+		boolean result;
+		if (campo.getIdMapa() == null && campo.getOrdinalTransformacion() == 0) {
+			result = registro.propertyIsNullOrEmpty(campo.getCodigo());
+		} else {
+			boolean propertyHasBeenHomologated = registro.propertyHasBeenHomologated(campo.getCodigo());
+			if (propertyHasBeenHomologated) {
+				result = false;
+			} else {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	protected void errorPropertyIsRequiredButValueIsNullOrEmpty(T registro, List<ArchivoErrorDto> errores,
+			CampoDto campo) {
+		val sb = new StringBuilder();
+
+		val valor = getPropertyValue(registro, campo);
+
+		sb.append(campo.getCodigo()).append(":");
+
+		if (StringUtils.isEmpty(valor)) {
+			sb.append("Este campo no admite valores vacíos, pero su valor es [%s].");
+		} else {
+			if (campo.getOrdinalTransformacion() > 0) {
+				if (campo.getIdMapa() != null) {
+					val format = "Este campo esta asociado al mapa de homologación con id=%d.Verifique que el valor [%s] exista en dicho mapa.";
+					sb.append(String.format(format, campo.getIdMapa(), valor));
+				} else {
+					val format = "Este campo requiere ser homologado. Contiene el valor [%s], pero este valor no pudo ser homologado.";
+					sb.append(String.format(format, valor));
+				}
+			} else {
+				sb.append(String.format("Este campo no admite el valor [%s].", valor));
+			}
+		}
+
+		val id = registro.getIdArchivo();
+		val error = ArchivoErrorDto.error(id, sb.toString(), registro.getNumeroLinea(), registro.toString());
+		errores.add(error);
+	}
+
+	protected String getPropertyValue(T registro, final com.egakat.integration.files.dto.CampoDto campo) {
+		String result;
+		if (campo.getOrdinalTransformacion() == 0) {
+			result = String.valueOf(registro.getObjectValueFromProperty(campo.getCodigo()));
+		} else {
+			result = registro.getHomologablePropertyValue(campo.getCodigo());
+		}
+		return result;
+	}
+
 	// -------------------------------------------------------------------------------------
 	// VALIDATE GROUPS
 	// -------------------------------------------------------------------------------------
-	protected void validateGroups(List<T> registros, ArrayList<ArchivoErrorDto> errores, List<CampoDto> campos) {
-		
+	protected void validateGroups(List<T> registros, List<ArchivoErrorDto> errores, List<CampoDto> campos) {
+
+	}
+
+	// -------------------------------------------------------------------------------------
+	// SAVE ROWS
+	// -------------------------------------------------------------------------------------
+	@Transactional(readOnly = false)
+	protected void saveRows(final java.util.List<T> registros) {
+		getRepository().saveAll(registros);
+//		registros.parallelStream().forEach(registro -> {
+//			getRepository().saveAndFlush(registro);
+//		});
 	}
 
 	// -------------------------------------------------------------------------------------
@@ -360,6 +351,18 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
+	protected boolean filter(T registro) {
+		switch (registro.getEstado()) {
+		case ESTRUCTURA_VALIDA:
+		case CORREGIDO:
+		case HOMOLOGADO:
+		case VALIDADO:
+			return true;
+		default:
+			return false;
+		}
+	}
+
 	public void discard(List<T> registros) {
 		// @formatter:off
 		val errores = registros
@@ -388,10 +391,8 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 		});
 	}
 
-//	protected <ID> void verificarErrorHomologacion(ID id, CampoDto campo, String valor) {
-//		if (id == null) {
-//			throw new RuntimeException(String.format(
-//					"%s: El valor [%s] no es un valor valido que pueda ser homologado.", campo.getCodigo(), valor));
-//		}
-//	}
+	protected void error(T registro, List<ArchivoErrorDto> errores, RuntimeException e) {
+		val error = ArchivoErrorDto.error(registro.getIdArchivo(), e, registro.getNumeroLinea(), registro.toString());
+		errores.add(error);
+	}
 }
