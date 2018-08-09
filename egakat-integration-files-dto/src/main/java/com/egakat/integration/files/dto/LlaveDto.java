@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.NumberFormat;
 
-import com.egakat.commons.dto.EntityDto;
+import com.egakat.commons.dto.BusinessEntityDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +24,7 @@ import lombok.val;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class LlaveDto extends EntityDto<Long>  {
-
-	private static final long serialVersionUID = 1L;
+public class LlaveDto extends BusinessEntityDto<Long>  {
 
 	private Long id;
 

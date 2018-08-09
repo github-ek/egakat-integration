@@ -8,7 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
-import com.egakat.commons.domain.BaseEntity;
+import com.egakat.commons.domain.BusinessEntity;
 import com.egakat.integration.files.enums.EstadoRegistroType;
 
 import lombok.AllArgsConstructor;
@@ -24,9 +24,7 @@ import lombok.val;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-abstract public class Registro extends BaseEntity<Long> {
-
-	private static final long serialVersionUID = 1L;
+abstract public class Registro extends BusinessEntity<Long> {
 
 	@Column(name = "id_archivo")
 	private Long idArchivo;

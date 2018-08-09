@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
-import com.egakat.commons.domain.BaseEntity;
+import com.egakat.commons.domain.BusinessEntity;
 import com.egakat.core.domain.InactivableObject;
 import com.egakat.core.domain.ObjectWithCode;
 import com.egakat.core.domain.SortableObject;
@@ -39,9 +39,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_campo"))
-public class Campo extends BaseEntity<Long> implements ObjectWithCode<Long>, SortableObject, InactivableObject {
-
-	private static final long serialVersionUID = 1L;
+public class Campo extends BusinessEntity<Long> implements ObjectWithCode<Long>, SortableObject, InactivableObject {
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_tipo_archivo", nullable = false)

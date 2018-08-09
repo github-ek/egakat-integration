@@ -20,7 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.util.Assert;
 
-import com.egakat.commons.dto.EntityDto;
+import com.egakat.commons.dto.BusinessEntityDto;
 import com.egakat.core.domain.InactivableObject;
 import com.egakat.core.domain.ObjectWithCode;
 import com.egakat.core.domain.SortableObject;
@@ -41,9 +41,7 @@ import lombok.val;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CampoDto extends EntityDto<Long> implements ObjectWithCode<Long>, SortableObject, InactivableObject {
-
-	private static final long serialVersionUID = 1L;
+public class CampoDto extends BusinessEntityDto<Long> implements ObjectWithCode<Long>, SortableObject, InactivableObject {
 
 	private long idTipoArchivo;
 

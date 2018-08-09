@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.egakat.commons.dto.EntityDto;
+import com.egakat.commons.dto.BusinessEntityDto;
 import com.egakat.core.domain.IdentifiedDomainObject;
 import com.egakat.integration.files.enums.EstadoRegistroType;
 
@@ -20,9 +20,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistroDto<T extends IdentifiedDomainObject<ID>, ID extends Serializable> extends EntityDto<Long> {
-
-	private static final long serialVersionUID = 1L;
+public class RegistroDto<T extends IdentifiedDomainObject<ID>, ID extends Serializable> extends BusinessEntityDto<Long> {
 
 	private Long idArchivo;
 

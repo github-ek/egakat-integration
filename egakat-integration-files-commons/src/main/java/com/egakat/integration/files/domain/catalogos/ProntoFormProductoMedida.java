@@ -25,8 +25,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ProntoFormProductoMedida extends Registro {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String CLIENTE_CODIGO = "CLIENTE_CODIGO";
 	public static final String PRODUCTO_CODIGO = "PRODUCTO_CODIGO";
 	public static final String PRODUCTO_NOMBRE = "PRODUCTO_NOMBRE";

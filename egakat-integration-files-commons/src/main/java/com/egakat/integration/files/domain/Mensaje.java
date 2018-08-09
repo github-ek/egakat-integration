@@ -9,7 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
-import com.egakat.commons.domain.BaseEntity;
+import com.egakat.commons.domain.BusinessEntity;
 import com.egakat.integration.files.enums.EstadoMensajeType;
 
 import lombok.AllArgsConstructor;
@@ -25,9 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_mensaje"))
-abstract public class Mensaje extends BaseEntity<Long> {
-
-	private static final long serialVersionUID = 1L;
+abstract public class Mensaje extends BusinessEntity<Long> {
 
 	@NotNull
 	@Enumerated(EnumType.STRING)

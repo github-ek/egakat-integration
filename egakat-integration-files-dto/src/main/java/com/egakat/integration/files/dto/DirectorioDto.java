@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.egakat.commons.dto.EntityDto;
+import com.egakat.commons.dto.BusinessEntityDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +22,7 @@ import lombok.val;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class DirectorioDto extends EntityDto<Long>  {
-
-	private static final long serialVersionUID = 1L;
+public class DirectorioDto extends BusinessEntityDto<Long>  {
 
 	private long idTipoArchivo;
 

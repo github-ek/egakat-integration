@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.commons.domain.BaseEntity;
+import com.egakat.commons.domain.BusinessEntity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -30,9 +30,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class ArchivoError extends BaseEntity<Long> {
-
-	private static final long serialVersionUID = 1L;
+public class ArchivoError extends BusinessEntity<Long> {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_archivo", nullable = false)

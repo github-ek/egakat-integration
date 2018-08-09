@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.commons.domain.BaseEntity;
+import com.egakat.commons.domain.BusinessEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +28,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_directorio"))
-public class Directorio extends BaseEntity<Long> {
-
-	private static final long serialVersionUID = 1L;
+public class Directorio extends BusinessEntity<Long> {
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_tipo_archivo", nullable = false)
