@@ -229,7 +229,7 @@ public class CampoDto extends BusinessEntityDto<Long> implements ObjectWithCode<
 			Long valorEnteroMin, Long valorEnteroMax, BigDecimal valorDecimalMin, BigDecimal valorDecimalMax,
 			LocalDate valorFechaMin, LocalDate valorFechaMax, LocalTime valorHoraMin, LocalTime valorHoraMax,
 			boolean activo) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.idTipoArchivo = idTipoArchivo;
 		this.ordinal = ordinal;
 		this.codigo = codigo;

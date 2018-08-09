@@ -39,22 +39,6 @@ abstract public class Registro extends BusinessEntity<Long> {
 
 	abstract public String getIdCorrelacion();
 
-	// @formatter:off
-	public Registro(
-			Long id, int version, 
-			LocalDateTime FechaCreacion, String createdBy, 
-			LocalDateTime FechaModificacion, String modifiedBy, 
-			Long idArchivo, 
-			EstadoRegistroType estado, 
-			int numeroLinea
-		) {
-		super(id, version, FechaCreacion, createdBy, FechaModificacion, modifiedBy);
-		this.idArchivo = idArchivo;
-		this.estado = estado;
-		this.numeroLinea = numeroLinea;
-	}
-	// @formatter:on
-
 	public boolean hasErrors() {
 		switch (getEstado()) {
 		case ERROR_ENRIQUECIMIENTO:
@@ -115,4 +99,13 @@ abstract public class Registro extends BusinessEntity<Long> {
 	abstract protected String getStringValueFromHomologableProperty(String property);
 
 	abstract protected Object getObjectValueFromHomologousProperty(String property);
+
+	public Registro(Long id, int version, LocalDateTime fechaCreacion, String creadoPor,
+			LocalDateTime fechaModificacion, String modificadoPor, Long idArchivo, @NotNull EstadoRegistroType estado,
+			int numeroLinea) {
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
+		this.idArchivo = idArchivo;
+		this.estado = estado;
+		this.numeroLinea = numeroLinea;
+	}
 }

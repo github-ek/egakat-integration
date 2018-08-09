@@ -40,16 +40,4 @@ abstract public class Mensaje extends BusinessEntity<Long> {
 
 	abstract public String correlacion();
 	
-	// @formatter:off
-	public Mensaje(Long id, int version, 
-			LocalDateTime FechaCreacion, String createdBy, 
-			LocalDateTime FechaModificacion, String modifiedBy, 
-			EstadoMensajeType estado, 
-			LocalDateTime fechaEnvio, LocalDateTime fechaConfirmacionEnvio) {
-		super(id, version, FechaCreacion, createdBy, FechaModificacion, modifiedBy);
-		this.estado = estado;
-		this.fechaEnvio = fechaEnvio;
-		this.fechaConfirmacionEnvio = fechaConfirmacionEnvio;
-	}
-	// @formatter:on
 }

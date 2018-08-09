@@ -103,7 +103,7 @@ public class DirectorioDto extends BusinessEntityDto<Long>  {
 			@NotNull @Size(max = 300) String directorioTemporal, @NotNull @Size(max = 300) String directorioDump,
 			@NotNull @Size(max = 300) String directorioProcesados, @NotNull @Size(max = 300) String directorioErrores,
 			@NotNull @Size(max = 300) String directorioSalidas) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.idTipoArchivo = idTipoArchivo;
 		this.subdirectorioTemplate = subdirectorioTemplate;
 		this.subdirectorioEntradas = subdirectorioEntradas;

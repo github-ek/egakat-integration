@@ -63,7 +63,7 @@ public class MapaDto extends BusinessEntityDto<Long> implements ObjectWithCode<L
 			LocalDateTime fechaModificacion, long idGrupoMapa, @NotNull @Size(max = 50) String codigo,
 			@NotNull @Size(max = 100) String nombre, @NotNull @Size(max = 200) String descripcion,
 			@NotNull @Size(max = 200) String patronClave, int ordinal, boolean activo, Map<String, String> valores) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.idGrupoMapa = idGrupoMapa;
 		this.codigo = codigo;
 		this.nombre = nombre;

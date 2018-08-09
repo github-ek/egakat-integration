@@ -45,7 +45,7 @@ public class ArchivoErrorDto extends BusinessEntityDto<Long> {
 	public ArchivoErrorDto(Long id, int version, String creadoPor, LocalDateTime fechaCreacion, String modificadoPor,
 			LocalDateTime fechaModificacion, long idArchivo, int numeroLinea, @NotNull @Size(max = 50) String codigo,
 			@NotNull @Size(max = 1024) String mensaje, @NotNull @Size(max = -1) String datos) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.idArchivo = idArchivo;
 		this.numeroLinea = numeroLinea;
 		this.codigo = codigo;

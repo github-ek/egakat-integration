@@ -38,7 +38,7 @@ public class ArchivoDto extends BusinessEntityDto<Long>  {
 	public ArchivoDto(Long id, int version, String creadoPor, LocalDateTime fechaCreacion, String modificadoPor,
 			LocalDateTime fechaModificacion, long idTipoArchivo, @NotNull @Size(max = 300) String nombre,
 			EstadoArchivoType estado, @NotNull @Size(max = 1024) String ruta) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.idTipoArchivo = idTipoArchivo;
 		this.nombre = nombre;
 		this.estado = estado;

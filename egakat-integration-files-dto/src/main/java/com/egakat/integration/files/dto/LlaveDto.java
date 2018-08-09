@@ -64,7 +64,7 @@ public class LlaveDto extends BusinessEntityDto<Long>  {
 	public LlaveDto(Long id, int version, String creadoPor, LocalDateTime fechaCreacion, String modificadoPor,
 			LocalDateTime fechaModificacion, Long id2, long idTipoArchivo, @NotNull @Size(max = 50) String codigo,
 			int ordinal, boolean activo, List<Long> campos) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		id = id2;
 		this.idTipoArchivo = idTipoArchivo;
 		this.codigo = codigo;

@@ -63,7 +63,7 @@ public class TipoArchivoDto extends BusinessEntityDto<Long> implements ObjectWit
 			@NotNull @Size(max = 100) String nombre, @NotNull @Size(max = 200) String descripcion,
 			@NotNull @Size(max = 4) String separadorRegistros, @NotNull @Size(max = 4) String separadorCampos,
 			@NotNull @Size(max = 300) String webApiUrlBase, int ordinal, boolean activo) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.idGrupoTipoArchivo = idGrupoTipoArchivo;
 		this.codigo = codigo;
 		this.nombre = nombre;
