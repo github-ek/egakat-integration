@@ -1,6 +1,5 @@
 package com.egakat.integration.files.dto;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistroDto<T extends IdentifiedDomainObject<ID>, ID extends Serializable> extends BusinessEntityDto<Long> {
+public class RegistroDto<T extends IdentifiedDomainObject<ID>, ID> extends BusinessEntityDto<Long> {
 
 	private Long idArchivo;
 

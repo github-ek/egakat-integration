@@ -21,7 +21,7 @@ import lombok.val;
 @MappedSuperclass
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 abstract public class Registro extends BusinessEntity<Long> {
