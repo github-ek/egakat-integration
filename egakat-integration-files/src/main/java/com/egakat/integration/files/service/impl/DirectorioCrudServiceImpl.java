@@ -97,7 +97,7 @@ public class DirectorioCrudServiceImpl extends CrudServiceImpl<Directorio, Direc
 	}
 
 	@Override
-	protected Directorio asEntity(DirectorioDto model, Directorio entity) {
+	protected Directorio mergeEntity(DirectorioDto model, Directorio entity) {
 		val tipoArchivo = tipoArchivorepository.getOne(model.getIdTipoArchivo());
 
 		entity.setTipoArchivo(tipoArchivo);

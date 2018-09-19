@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.commons.domain.BusinessEntity;
+import com.egakat.commons.domain.AuditableEntity;
 import com.egakat.integration.files.enums.EstadoArchivoType;
 
 import lombok.Getter;
@@ -40,7 +40,7 @@ import lombok.ToString;
 @ToString(callSuper = true, exclude = { "errores" })
 @NoArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_archivo"))
-public class Archivo extends BusinessEntity<Long> {
+public class Archivo extends AuditableEntity<Long> {
 
 	@Column(name = "id_tipo_archivo", nullable = false)
 	@NotNull

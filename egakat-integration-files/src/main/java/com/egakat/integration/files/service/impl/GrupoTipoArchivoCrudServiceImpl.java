@@ -47,7 +47,7 @@ public class GrupoTipoArchivoCrudServiceImpl
 	}
 
 	@Override
-	protected GrupoTipoArchivo asEntity(GrupoTipoArchivoDto model, GrupoTipoArchivo entity) {
+	protected GrupoTipoArchivo mergeEntity(GrupoTipoArchivoDto model, GrupoTipoArchivo entity) {
 
 		entity.setCodigo(model.getCodigo());
 		entity.setNombre(model.getNombre());

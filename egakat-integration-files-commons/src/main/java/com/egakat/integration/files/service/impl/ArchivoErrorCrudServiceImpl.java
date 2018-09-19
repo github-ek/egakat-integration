@@ -54,7 +54,7 @@ public class ArchivoErrorCrudServiceImpl
 	}
 
 	@Override
-	protected ArchivoError asEntity(ArchivoErrorDto model, ArchivoError entity) {
+	protected ArchivoError mergeEntity(ArchivoErrorDto model, ArchivoError entity) {
 		val archivo = archivoRepository.getOne(model.getIdArchivo());
 		
 		entity.setArchivo(archivo);

@@ -9,7 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
-import com.egakat.commons.domain.BusinessEntity;
+import com.egakat.commons.domain.AuditableEntity;
 import com.egakat.integration.files.enums.EstadoMensajeType;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_mensaje"))
-abstract public class Mensaje extends BusinessEntity<Long> {
+abstract public class Mensaje extends AuditableEntity<Long> {
 
 	@NotNull
 	@Enumerated(EnumType.STRING)

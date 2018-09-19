@@ -56,7 +56,7 @@ public class LlaveCrudServiceImpl extends CrudServiceImpl<Llave, LlaveDto, Long>
 	}
 
 	@Override
-	protected Llave asEntity(LlaveDto model, Llave entity) {
+	protected Llave mergeEntity(LlaveDto model, Llave entity) {
 		val tipoArchivo = tipoArchivorepository.getOne(model.getIdTipoArchivo());
 
 		entity.setTipoArchivo(tipoArchivo);

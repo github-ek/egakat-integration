@@ -48,7 +48,7 @@ public class GrupoMapaCrudServiceImpl extends CrudServiceImpl<GrupoMapa, GrupoMa
 	}
 
 	@Override
-	protected GrupoMapa asEntity(GrupoMapaDto model, GrupoMapa entity) {
+	protected GrupoMapa mergeEntity(GrupoMapaDto model, GrupoMapa entity) {
 
 		entity.setCodigo(model.getCodigo());
 		entity.setNombre(model.getNombre());

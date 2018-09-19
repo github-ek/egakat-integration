@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.NumberFormat;
 
-import com.egakat.commons.domain.BusinessEntity;
+import com.egakat.commons.domain.AuditableEntity;
 import com.egakat.core.domain.InactivableObject;
 
 import lombok.Getter;
@@ -35,7 +35,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_llave"))
-public class Llave extends BusinessEntity<Long> implements InactivableObject {
+public class Llave extends AuditableEntity<Long> implements InactivableObject {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_tipo_archivo", nullable = false)

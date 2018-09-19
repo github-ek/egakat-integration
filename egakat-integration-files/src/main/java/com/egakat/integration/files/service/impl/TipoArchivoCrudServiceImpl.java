@@ -61,7 +61,7 @@ public class TipoArchivoCrudServiceImpl extends CrudServiceImpl<TipoArchivo, Tip
 	}
 
 	@Override
-	protected TipoArchivo asEntity(TipoArchivoDto model, TipoArchivo entity) {
+	protected TipoArchivo mergeEntity(TipoArchivoDto model, TipoArchivo entity) {
 		val grupoTipoArchivo = grupoTipoArchivorepository.getOne(model.getIdGrupoTipoArchivo());
 
 		entity.setGrupoTipoArchivo(grupoTipoArchivo);

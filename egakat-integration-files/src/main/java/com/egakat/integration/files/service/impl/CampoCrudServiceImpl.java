@@ -79,7 +79,7 @@ public class CampoCrudServiceImpl extends CrudServiceImpl<Campo, CampoDto, Long>
 	}
 
 	@Override
-	protected Campo asEntity(CampoDto model, Campo entity) {
+	protected Campo mergeEntity(CampoDto model, Campo entity) {
 		val tipoArchivo = tipoArchivorepository.getOne(model.getIdTipoArchivo());
 
 		entity.setTipoArchivo(tipoArchivo);

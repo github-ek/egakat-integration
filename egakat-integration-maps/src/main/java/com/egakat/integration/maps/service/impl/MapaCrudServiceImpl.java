@@ -58,7 +58,7 @@ public class MapaCrudServiceImpl extends CrudServiceImpl<Mapa, MapaDto, Long> im
 	}
 
 	@Override
-	protected Mapa asEntity(MapaDto model, Mapa entity) {
+	protected Mapa mergeEntity(MapaDto model, Mapa entity) {
 		val grupoMapa = grupoMapaRepository.getOne(model.getIdGrupoMapa());
 
 		entity.setGrupoMapa(grupoMapa);

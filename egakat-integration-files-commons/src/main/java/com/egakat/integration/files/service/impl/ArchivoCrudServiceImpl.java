@@ -64,7 +64,7 @@ public class ArchivoCrudServiceImpl extends CrudServiceImpl<Archivo, ArchivoDto,
 	}
 
 	@Override
-	protected Archivo asEntity(ArchivoDto model, Archivo entity) {
+	protected Archivo mergeEntity(ArchivoDto model, Archivo entity) {
 		entity.setIdTipoArchivo(model.getIdTipoArchivo());
 		entity.setNombre(model.getNombre());
 		entity.setEstado(model.getEstado());
