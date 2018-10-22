@@ -245,7 +245,7 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 		val registros = request.getRegistros();
 		Validate.notEmpty(registros, "El archivo no contiene registros validos.");
 		
-		registros.parallelStream().forEach(registro -> {
+		registros.stream().forEach(registro -> {
 			T entity = getRepository().saveAndFlush(registro.getEntidad());
 			registro.setEntidad(entity);
 		});
