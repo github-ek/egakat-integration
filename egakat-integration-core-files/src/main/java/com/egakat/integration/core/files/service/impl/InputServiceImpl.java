@@ -1,10 +1,5 @@
-	package com.egakat.integration.core.files.service.impl;
+package com.egakat.integration.core.files.service.impl;
 
-import static com.egakat.integration.core.files.components.Constantes.COLECCION_NO_PUEDE_ESTAR_VACIA;
-import static com.egakat.integration.core.files.components.Constantes.VALORES_DEBEN_COINCIDIR;
-import static com.egakat.integration.core.files.components.Constantes.VALOR_NO_PUEDE_SER_NULO;
-import static com.egakat.integration.core.files.components.Constantes.VALOR_NO_PUEDE_SER_UNA_CADENA_VACIA;
-import static com.egakat.integration.files.enums.EstadoArchivoType.NO_PROCESADO;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import java.io.BufferedWriter;
@@ -16,13 +11,18 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.egakat.integration.commons.archivos.domain.Registro;
+import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.dto.EtlRequestDto;
+import com.egakat.integration.commons.archivos.enums.EstadoArchivoType;
+import com.egakat.integration.commons.archivos.repository.RegistroRepository;
+import com.egakat.integration.commons.archivos.service.api.ArchivoCrudService;
 import com.egakat.integration.core.files.components.Constantes;
 import com.egakat.integration.core.files.components.decorators.CamposSplitterDecorator;
 import com.egakat.integration.core.files.components.decorators.CheckNumeroDeColumnasDecorator;
@@ -37,22 +37,15 @@ import com.egakat.integration.core.files.components.decorators.NormalizarSeparad
 import com.egakat.integration.core.files.components.readers.Reader;
 import com.egakat.integration.core.files.exceptions.EtlRuntimeException;
 import com.egakat.integration.core.files.service.api.InputService;
-import com.egakat.integration.files.client.service.api.TipoArchivoLocalService;
-import com.egakat.integration.files.domain.Registro;
-import com.egakat.integration.files.dto.ArchivoErrorDto;
-import com.egakat.integration.files.dto.EtlRequestDto;
-import com.egakat.integration.files.repository.RegistroRepository;
-import com.egakat.integration.files.service.api.ArchivoCrudService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
-@Transactional(readOnly = true)
 @Slf4j
 public abstract class InputServiceImpl<T extends Registro> implements InputService<T> {
 
 	@Autowired
-	private TipoArchivoLocalService tipoArchivoLocalService;
+	private RequestService<T> requestService;
 
 	@Autowired
 	private ArchivoCrudService archivoService;
@@ -63,7 +56,8 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 
 	@Override
 	public List<Long> getArchivosPendientes() {
-		val result = archivoService.findAllIdByTipoArchivoCodigoAndEstadoIn(getTipoArchivoCodigo(), Arrays.asList(NO_PROCESADO));
+		val result = archivoService.findAllIdByTipoArchivoCodigoAndEstadoIn(getTipoArchivoCodigo(),
+				EstadoArchivoType.NO_PROCESADO);
 		return result;
 	}
 
@@ -72,10 +66,11 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 	// -----------------------------------------------------------------------------------------------------------
 	@Override
 	public void extraer(long archivoId) {
-		boolean error = false;
-		EtlRequestDto<T, Long> request = buildRequest(archivoId);
+		val archivo = archivoService.findOneById(archivoId);
 		val errores = new ArrayList<ArchivoErrorDto>();
 
+		EtlRequestDto<T, Long> request = requestService.buildRequest(archivo);
+		boolean error = false;
 		try {
 			request = extraer(request);
 			request = transformar(request);
@@ -96,42 +91,9 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 		archivoService.registrarResultadosValidacionEstructura(request.getArchivo(), errores);
 	}
 
-	protected EtlRequestDto<T, Long> buildRequest(long id) {
-		val archivo = archivoService.findOneById(id);
-		val tipoArchivo = tipoArchivoLocalService.findOneById(archivo.getIdTipoArchivo());
-		val campos = tipoArchivoLocalService.findAllCamposByTipoArchivo(archivo.getIdTipoArchivo());
-		val llaves = tipoArchivoLocalService.findAllLlavesByTipoArchivo(archivo.getIdTipoArchivo());
-		val directorio = tipoArchivoLocalService.findOneDirectorioByTipoArchivo(archivo.getIdTipoArchivo());
-
-		Validate.notEmpty(getTipoArchivoCodigo(), VALOR_NO_PUEDE_SER_UNA_CADENA_VACIA + "getTipoArchivoCodigo()");
-		Validate.notNull(archivo, VALOR_NO_PUEDE_SER_NULO + "archivo");
-		Validate.notEmpty(archivo.getNombre(), VALOR_NO_PUEDE_SER_UNA_CADENA_VACIA + "archivo.getNombre()");
-		Validate.notNull(tipoArchivo, VALOR_NO_PUEDE_SER_NULO + "tipoArchivo");
-		Validate.notEmpty(campos, COLECCION_NO_PUEDE_ESTAR_VACIA + "campos");
-		Validate.notNull(directorio, VALOR_NO_PUEDE_SER_NULO + "directorio");
-		Validate.isTrue(getTipoArchivoCodigo().equals(tipoArchivo.getCodigo()), String.format(VALORES_DEBEN_COINCIDIR,
-				"Tipo de archivo", getTipoArchivoCodigo(), tipoArchivo.getCodigo()));
-
-		// @formatter:off
-		val request = EtlRequestDto
-				.<T, Long>builder()
-				.archivo(archivo)
-				.tipoArchivo(tipoArchivo)
-				.campos(campos)
-				.llaves(llaves)
-				.directorio(directorio)
-				.datos(null)
-				.registros(new ArrayList<>())
-				.build();
-		// @formatter:on
-
-		return request;
-	}
-
 	// -----------------------------------------------------------------------------------------------------------
 	// -- EXTRAER
 	// -----------------------------------------------------------------------------------------------------------
-
 	protected EtlRequestDto<T, Long> extraer(EtlRequestDto<T, Long> request) {
 		Validate.notNull(request, Constantes.VALOR_NO_PUEDE_SER_NULO + "request");
 		Validate.notNull(getReader(), Constantes.VALOR_NO_PUEDE_SER_NULO + "getReader()");
@@ -163,7 +125,7 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 			Validate.isTrue(Files.exists(origen), Constantes.NO_SE_ENCONTRO_EL_ARCHIVO + origen.toString());
 
 			val now = LocalDateTime.now();
-			Path destino = Paths.get(request.getDirectorio().getSubdirectorioDump());
+			Path destino = Paths.get(request.getSubdirectorioDump());
 			destino = destino.resolve(getDirectorioBackup(now));
 			destino = destino.resolve(getNombreArchivoBackup(origen, now) + ".TXT");
 
@@ -244,7 +206,7 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 	protected EtlRequestDto<T, Long> cargar(EtlRequestDto<T, Long> request) {
 		val registros = request.getRegistros();
 		Validate.notEmpty(registros, "El archivo no contiene registros validos.");
-		
+
 		registros.stream().forEach(registro -> {
 			T entity = getRepository().saveAndFlush(registro.getEntidad());
 			registro.setEntidad(entity);
@@ -258,7 +220,7 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 	// ----------------------------------------------------------------------------------------------------------------
 	protected void backupSuccess(EtlRequestDto<T, Long> request) {
 		val origen = request.getPathRuta();
-		val destino = Paths.get(request.getDirectorio().getSubdirectorioProcesados());
+		val destino = Paths.get(request.getSubdirectorioProcesados());
 
 		try {
 			val ruta = backup(origen, destino);
@@ -270,7 +232,7 @@ public abstract class InputServiceImpl<T extends Registro> implements InputServi
 
 	protected void backupError(EtlRequestDto<T, Long> request) {
 		val origen = request.getPathRuta();
-		val destino = Paths.get(request.getDirectorio().getSubdirectorioErrores());
+		val destino = Paths.get(request.getSubdirectorioErrores());
 
 		try {
 			val ruta = backup(origen, destino);

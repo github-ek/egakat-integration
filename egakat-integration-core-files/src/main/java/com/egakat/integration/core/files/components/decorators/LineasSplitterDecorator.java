@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import com.egakat.core.domain.IdentifiedDomainObject;
+import com.egakat.integration.commons.archivos.dto.EtlRequestDto;
+import com.egakat.integration.commons.archivos.dto.RegistroDto;
 import com.egakat.integration.core.files.components.Constantes;
-import com.egakat.integration.files.dto.EtlRequestDto;
-import com.egakat.integration.files.dto.RegistroDto;
 
 import lombok.val;
 

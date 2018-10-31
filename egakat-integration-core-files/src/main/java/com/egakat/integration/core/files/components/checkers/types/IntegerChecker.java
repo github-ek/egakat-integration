@@ -2,9 +2,9 @@ package com.egakat.integration.core.files.components.checkers.types;
 
 import java.util.List;
 
+import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
+import com.egakat.integration.commons.tiposarchivo.enums.DatoType;
 import com.egakat.integration.core.files.components.checkers.CampoChecker;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.integration.files.enums.DatoType;
 
 import lombok.val;
 

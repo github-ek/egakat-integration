@@ -2,7 +2,7 @@ package com.egakat.integration.core.files.components.checkers.types;
 
 import java.math.BigDecimal;
 
-import com.egakat.integration.files.dto.CampoDto;
+import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
 
 public class DecimalMinChecker extends MinChecker<BigDecimal> {
 	@Override

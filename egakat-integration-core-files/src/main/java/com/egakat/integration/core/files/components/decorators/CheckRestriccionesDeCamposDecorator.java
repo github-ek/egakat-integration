@@ -9,6 +9,10 @@ import java.util.List;
 import org.apache.commons.lang3.Validate;
 
 import com.egakat.core.domain.IdentifiedDomainObject;
+import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.dto.EtlRequestDto;
+import com.egakat.integration.commons.archivos.dto.RegistroDto;
+import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
 import com.egakat.integration.core.files.components.Constantes;
 import com.egakat.integration.core.files.components.checkers.ExpresionRegularChecker;
 import com.egakat.integration.core.files.components.checkers.NumeroMaximoDeCaracteresChecker;
@@ -16,10 +20,6 @@ import com.egakat.integration.core.files.components.checkers.TipoDeDatoChecker;
 import com.egakat.integration.core.files.components.checkers.ValorObligatorioChecker;
 import com.egakat.integration.core.files.components.checkers.ValoresPermitidosChecker;
 import com.egakat.integration.core.files.exceptions.EtlRuntimeException;
-import com.egakat.integration.files.dto.ArchivoErrorDto;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.integration.files.dto.EtlRequestDto;
-import com.egakat.integration.files.dto.RegistroDto;
 
 import lombok.val;
 

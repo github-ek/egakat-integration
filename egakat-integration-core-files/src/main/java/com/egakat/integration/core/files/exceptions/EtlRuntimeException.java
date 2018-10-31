@@ -3,7 +3,7 @@ package com.egakat.integration.core.files.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.egakat.integration.files.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
 
 import lombok.Getter;
 import lombok.val;

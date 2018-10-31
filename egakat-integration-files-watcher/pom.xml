@@ -36,19 +36,22 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>egakat-integration-files-client</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>egakat-integration-files-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
 			<version>6.2.2.jre8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-core-web-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-core-web-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-integration-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

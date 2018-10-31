@@ -2,7 +2,7 @@ package com.egakat.integration.core.files.service.api;
 
 import java.util.List;
 
-import com.egakat.integration.files.domain.Registro;
+import com.egakat.integration.commons.archivos.domain.Registro;
 
 public interface InputService<T extends Registro> {
 	

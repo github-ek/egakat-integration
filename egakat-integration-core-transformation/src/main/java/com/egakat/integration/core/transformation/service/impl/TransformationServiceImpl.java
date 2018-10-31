@@ -1,14 +1,12 @@
 package com.egakat.integration.core.transformation.service.impl;
 
-import static com.egakat.integration.files.enums.EstadoRegistroType.CORREGIDO;
-import static com.egakat.integration.files.enums.EstadoRegistroType.DESCARTADO;
-import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_ENRIQUECIMIENTO;
-import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_HOMOLOGACION;
-import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_VALIDACION;
-import static com.egakat.integration.files.enums.EstadoRegistroType.ESTRUCTURA_VALIDA;
-import static com.egakat.integration.files.enums.EstadoRegistroType.HOMOLOGADO;
-import static com.egakat.integration.files.enums.EstadoRegistroType.PROCESADO;
-import static com.egakat.integration.files.enums.EstadoRegistroType.VALIDADO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.DESCARTADO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.ERROR_ENRIQUECIMIENTO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.ERROR_HOMOLOGACION;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.ERROR_VALIDACION;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.HOMOLOGADO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.PROCESADO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.VALIDADO;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -20,15 +18,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.egakat.integration.commons.archivos.domain.Registro;
+import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.enums.EstadoRegistroType;
+import com.egakat.integration.commons.archivos.repository.RegistroRepository;
+import com.egakat.integration.commons.archivos.service.api.ArchivoCrudService;
+import com.egakat.integration.commons.mapas.service.api.MapaCrudService;
+import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
+import com.egakat.integration.commons.tiposarchivos.service.api.CampoCrudService;
+import com.egakat.integration.commons.tiposarchivos.service.api.TipoArchivoCrudService;
 import com.egakat.integration.core.transformation.service.api.TransformationService;
-import com.egakat.integration.files.client.service.api.TipoArchivoLocalService;
-import com.egakat.integration.files.domain.Registro;
-import com.egakat.integration.files.dto.ArchivoErrorDto;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.integration.files.enums.EstadoRegistroType;
-import com.egakat.integration.files.repository.RegistroRepository;
-import com.egakat.integration.files.service.api.ArchivoCrudService;
-import com.egakat.integration.maps.client.service.api.MapaLocalService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public abstract class TransformationServiceImpl<T extends Registro> implements TransformationService<T> {
 
-	protected List<EstadoRegistroType> ESTADOS_REGISTROS = asList(ESTRUCTURA_VALIDA, CORREGIDO);
+	protected List<EstadoRegistroType> ESTADOS_REGISTROS = asList(EstadoRegistroType.ESTRUCTURA_VALIDA, EstadoRegistroType.CORREGIDO);
 
 	@Autowired
 	private ArchivoCrudService archivoService;
@@ -47,17 +46,20 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	}
 
 	@Autowired
-	private TipoArchivoLocalService tipoArchivoLocalService;
+	private TipoArchivoCrudService tipoArchivoLocalService;
 
-	protected TipoArchivoLocalService getTipoArchivoLocalService() {
+	@Autowired
+	private CampoCrudService camposService;
+
+	protected TipoArchivoCrudService getTipoArchivoLocalService() {
 		return tipoArchivoLocalService;
 	}
 
 	@Autowired
-	private MapaLocalService mapaLocalService;
+	private MapaCrudService mapasService;
 
-	protected MapaLocalService getMapaLocalService() {
-		return mapaLocalService;
+	protected MapaCrudService getMapasService() {
+		return mapasService;
 	}
 
 	abstract protected RegistroRepository<T> getRepository();
@@ -75,7 +77,7 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 	@Override
 	public void transformar(Long archivoId) {
 		val archivo = getArchivoService().findOneById(archivoId);
-		val campos = getTipoArchivoLocalService().findAllCamposByTipoArchivo(archivo.getIdTipoArchivo());
+		val campos = camposService.findAllByTipoArchivoId(archivo.getIdTipoArchivo());
 		val errores = new ArrayList<ArchivoErrorDto>();
 
 		try {
@@ -191,9 +193,12 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 		String result = key;
 		val id = campo.getIdMapa();
 		if (id != null) {
-			result = getMapaLocalService().findMapaValorByMapaIdAndMapaClave(id, key);
-			if (result == null) {
-				result = key;
+			val optional = getMapasService().findById(id);
+			if (optional.isPresent()) {
+				val value = optional.get().getValores().get(campo.getCodigo());
+				if(value != null) {
+					result = key;
+				}
 			}
 		}
 		return result;
@@ -259,7 +264,7 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 		return success;
 	}
 
-	protected boolean propertyIsNullOrEmpty(T registro, final com.egakat.integration.files.dto.CampoDto campo) {
+	protected boolean propertyIsNullOrEmpty(T registro, final CampoDto campo) {
 		boolean result;
 		if (campo.getIdMapa() == null && campo.getOrdinalTransformacion() == 0) {
 			result = registro.propertyIsNullOrEmpty(campo.getCodigo());
@@ -303,7 +308,7 @@ public abstract class TransformationServiceImpl<T extends Registro> implements T
 		errores.add(error);
 	}
 
-	protected String getPropertyValue(T registro, final com.egakat.integration.files.dto.CampoDto campo) {
+	protected String getPropertyValue(T registro, final CampoDto campo) {
 		String result;
 		if (campo.getOrdinalTransformacion() == 0) {
 			result = String.valueOf(registro.getObjectValueFromProperty(campo.getCodigo()));

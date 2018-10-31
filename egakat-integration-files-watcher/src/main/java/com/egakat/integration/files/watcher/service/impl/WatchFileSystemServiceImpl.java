@@ -30,11 +30,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.integration.files.client.service.api.TipoArchivoLocalService;
-import com.egakat.integration.files.dto.ArchivoDto;
-import com.egakat.integration.files.dto.DirectorioDto;
-import com.egakat.integration.files.enums.EstadoArchivoType;
-import com.egakat.integration.files.service.api.ArchivoCrudService;
+import com.egakat.integration.commons.archivos.dto.ArchivoDto;
+import com.egakat.integration.commons.archivos.enums.EstadoArchivoType;
+import com.egakat.integration.commons.archivos.service.api.ArchivoCrudService;
+import com.egakat.integration.commons.tiposarchivo.dto.DirectorioDto;
+import com.egakat.integration.commons.tiposarchivos.service.api.TipoArchivoCrudService;
 import com.egakat.integration.files.watcher.service.api.WatchFileSystemService;
 
 import lombok.AccessLevel;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 
 	@Autowired
-	private TipoArchivoLocalService tipoArchivoService;
+	private TipoArchivoCrudService tipoArchivoService;
 
 	@Autowired
 	private ArchivoCrudService archivoService;
@@ -97,11 +97,11 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 	}
 
 	protected void reset() throws IOException {
-		if(this.watcher != null) {
+		if (this.watcher != null) {
 			try {
 				this.watcher.close();
 			} catch (IOException e) {
-				log.error("this.watcher.close()",e);
+				log.error("this.watcher.close()", e);
 			}
 		}
 		this.watcher = FileSystems.getDefault().newWatchService();
@@ -117,7 +117,7 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 		try {
 			this.reset();
 		} catch (IOException | UnsupportedOperationException e) {
-			log.error("Error al intentar obtener un nuevo WatchService. El servicio no se pudo iniciar.",e);
+			log.error("Error al intentar obtener un nuevo WatchService. El servicio no se pudo iniciar.", e);
 			return false;
 		}
 
@@ -131,8 +131,8 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 		for (val tipoArchivo : tiposArchivo) {
 			log.info("Registrando los directorios del tipo de archivo {}", tipoArchivo.getCodigo());
 
-			val directorio = tipoArchivoService.findOneDirectorioByTipoArchivo(tipoArchivo.getId());
-			register(directorio);
+			//val directorio = tipoArchivoService.findOneDirectorioByTipoArchivo(tipoArchivo.getId());
+			//register(directorio);
 		}
 
 		this.setRunning(true);
@@ -271,17 +271,14 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 				Files.move(pathOrigen, pathDestino, StandardCopyOption.REPLACE_EXISTING);
 				log.info(">>>>>MOVIDO");
 
-				// @formatter:off
-				val model = ArchivoDto
-						.builder()
-						.id(null)
-						.idTipoArchivo(directorio.getIdTipoArchivo())
-						.nombre(pathDestino.getFileName().toString())
-						.estado(EstadoArchivoType.NO_PROCESADO)
-						.ruta(pathDestino.toString())
-						.version(0)
-						.build();
-				// @formatter:on
+				val model = new ArchivoDto();
+
+				model.setId(null);
+				model.setIdTipoArchivo(directorio.getIdTipoArchivo());
+				model.setNombre(pathDestino.getFileName().toString());
+				model.setEstado(EstadoArchivoType.NO_PROCESADO);
+				model.setRuta(pathDestino.toString());
+
 				archivoService.create(model);
 				log.info(">>>>>CREADO");
 			} catch (NoSuchFileException e) {

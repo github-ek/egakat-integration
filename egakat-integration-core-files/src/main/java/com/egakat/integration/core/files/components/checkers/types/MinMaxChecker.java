@@ -1,7 +1,7 @@
 package com.egakat.integration.core.files.components.checkers.types;
 
+import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
 import com.egakat.integration.core.files.components.checkers.CampoChecker;
-import com.egakat.integration.files.dto.CampoDto;
 
 public abstract class MinMaxChecker<T extends Comparable<T>> implements CampoChecker<T> {
 	@Override

@@ -127,11 +127,11 @@
 		<module>egakat-integration-core-transformation</module>
 
 		<module>egakat-integration-maps</module>
-		<module>egakat-integration-maps-client</module>
+		
 		<module>egakat-integration-maps-dto</module>
 
 		<module>egakat-integration-files</module>
-		<module>egakat-integration-files-client</module>
+		
 		<module>egakat-integration-files-dto</module>
 
 		<module>egakat-integration-files-watcher</module>

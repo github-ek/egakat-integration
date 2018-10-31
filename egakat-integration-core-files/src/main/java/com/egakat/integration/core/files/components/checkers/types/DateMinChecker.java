@@ -3,7 +3,7 @@ package com.egakat.integration.core.files.components.checkers.types;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 
-import com.egakat.integration.files.dto.CampoDto;
+import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
 
 public class DateMinChecker extends MinChecker<ChronoLocalDate> {
 	@Override

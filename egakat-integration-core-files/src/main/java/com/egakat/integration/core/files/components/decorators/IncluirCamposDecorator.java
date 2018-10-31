@@ -11,9 +11,9 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.text.StrSubstitutor;
 
 import com.egakat.core.domain.IdentifiedDomainObject;
+import com.egakat.integration.commons.archivos.dto.EtlRequestDto;
+import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
 import com.egakat.integration.core.files.components.Constantes;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.integration.files.dto.EtlRequestDto;
 
 import lombok.val;
 
