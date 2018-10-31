@@ -121,19 +121,9 @@
 		</dependencies>
 	</dependencyManagement>
 	<modules>
-		<module>egakat-integration-files-commons</module>
-
+		<module>egakat-integration-commons</module>
+		<module>egakat-integration-commons-dto</module>
 		<module>egakat-integration-core-files</module>
 		<module>egakat-integration-core-transformation</module>
-
-		<module>egakat-integration-maps</module>
-		
-		<module>egakat-integration-maps-dto</module>
-
-		<module>egakat-integration-files</module>
-		
-		<module>egakat-integration-files-dto</module>
-
-		<module>egakat-integration-files-watcher</module>
 	</modules>
 </project>
