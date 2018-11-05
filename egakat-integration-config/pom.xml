@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>com.egakat</groupId>
 			<artifactId>egakat-core-web-api</artifactId>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>com.egakat</groupId>
 			<artifactId>egakat-integration-config-dto</artifactId>
@@ -50,10 +50,6 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>egakat-core-web-client</artifactId>
 		</dependency>
 	</dependencies>
 </project>
