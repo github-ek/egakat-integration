@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.egakat.core.domain.IdentifiedDomainObject;
-import com.egakat.integration.commons.archivos.dto.EtlRequestDto;
 import com.egakat.integration.commons.archivos.dto.RegistroDto;
+import com.egakat.integration.config.archivos.dto.EtlRequestDto;
 
 import lombok.val;
 

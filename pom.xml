@@ -80,11 +80,6 @@
 			</dependency>
 			<dependency>
 				<groupId>com.egakat</groupId>
-				<artifactId>egakat-core-configuration</artifactId>
-				<version>${egakat.core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
 				<artifactId>egakat-core-domain</artifactId>
 				<version>${egakat.core.version}</version>
 			</dependency>
@@ -108,22 +103,15 @@
 				<artifactId>egakat-core-web-client</artifactId>
 				<version>${egakat.core.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>egakat-commons-domain</artifactId>
-				<version>${egakat.core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>egakat-commons-dto</artifactId>
-				<version>${egakat.core.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>
 		<module>egakat-integration-commons</module>
 		<module>egakat-integration-commons-dto</module>
-		<module>egakat-integration-core-files</module>
-		<module>egakat-integration-core-transformation</module>
+		
+		
+		<module>egakat-integration-config</module>
+		<module>egakat-integration-config-dto</module>
+		<module>egakat-integration-config-client</module>
 	</modules>
 </project>

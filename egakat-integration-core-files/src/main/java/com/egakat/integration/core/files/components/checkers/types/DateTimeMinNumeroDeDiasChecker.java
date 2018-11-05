@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
 
-import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
+import com.egakat.integration.config.archivos.dto.CampoDto;
 
 public class DateTimeMinNumeroDeDiasChecker extends MinChecker<ChronoLocalDateTime<?>> {
 	@Override

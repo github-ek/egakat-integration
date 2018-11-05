@@ -2,7 +2,7 @@ package com.egakat.integration.core.files.components.checkers;
 
 import org.springframework.util.StringUtils;
 
-import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
+import com.egakat.integration.config.archivos.dto.CampoDto;
 import com.egakat.integration.core.files.components.checkers.types.DateChecker;
 import com.egakat.integration.core.files.components.checkers.types.DateTimeChecker;
 import com.egakat.integration.core.files.components.checkers.types.DecimalChecker;

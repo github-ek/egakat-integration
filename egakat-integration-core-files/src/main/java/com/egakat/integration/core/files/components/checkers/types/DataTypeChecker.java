@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
-import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
-import com.egakat.integration.commons.tiposarchivo.enums.DatoType;
+import com.egakat.integration.config.archivos.dto.CampoDto;
+import com.egakat.integration.config.archivos.enums.DatoType;
 import com.egakat.integration.core.files.components.checkers.CampoChecker;
 
 import lombok.val;

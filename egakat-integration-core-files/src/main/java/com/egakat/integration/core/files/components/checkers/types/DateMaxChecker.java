@@ -3,7 +3,7 @@ package com.egakat.integration.core.files.components.checkers.types;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 
-import com.egakat.integration.commons.tiposarchivo.dto.CampoDto;
+import com.egakat.integration.config.archivos.dto.CampoDto;
 
 
 public class DateMaxChecker extends MaxChecker<ChronoLocalDate> {
