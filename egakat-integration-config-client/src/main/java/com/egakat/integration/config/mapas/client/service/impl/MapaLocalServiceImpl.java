@@ -39,7 +39,7 @@ public class MapaLocalServiceImpl extends LocalQueryServiceImpl<MapaDto, Long> i
 		return MapaDto[].class;
 	}
 
-	@Cacheable(cacheNames = "mapas", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "mapa-by-id", sync = true, unless = "#result == null")
 	@Override
 	public MapaDto findOneById(Long id) {
 		return super.findOneById(id);
@@ -56,7 +56,7 @@ public class MapaLocalServiceImpl extends LocalQueryServiceImpl<MapaDto, Long> i
 		return result;
 	}
 
-	@CacheEvict(cacheNames = { "mapas", "mapas-valores" }, allEntries = true)
+	@CacheEvict(cacheNames = { "mapa-by-id", "mapas-valores" }, allEntries = true)
 	@Override
 	public void cacheEvict() {
 
