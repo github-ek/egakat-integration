@@ -45,12 +45,13 @@ public class TipoArchivoCrudServiceImpl extends CrudServiceImpl<TipoArchivo, Tip
 		result.setDescripcion(entity.getDescripcion());
 		result.setSeparadorRegistros(entity.getSeparadorRegistros());
 		result.setSeparadorCampos(entity.getSeparadorCampos());
+		result.setAplicacion(entity.getAplicacion());
 		result.setOrdinal(entity.getOrdinal());
 		result.setActivo(entity.isActivo());
-		
+
 		return result;
 	}
-	
+
 	@Override
 	protected TipoArchivoDto newModel() {
 		return new TipoArchivoDto();
@@ -66,6 +67,7 @@ public class TipoArchivoCrudServiceImpl extends CrudServiceImpl<TipoArchivo, Tip
 		entity.setDescripcion(model.getDescripcion());
 		entity.setSeparadorRegistros(model.getSeparadorRegistros());
 		entity.setSeparadorCampos(model.getSeparadorCampos());
+		entity.setAplicacion(model.getAplicacion());
 		entity.setOrdinal(model.getOrdinal());
 		entity.setActivo(model.isActivo());
 
@@ -85,21 +87,21 @@ public class TipoArchivoCrudServiceImpl extends CrudServiceImpl<TipoArchivo, Tip
 		return result;
 	}
 
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	@Override
-	public List<TipoArchivoDto> findAllActivos() {
-		val comparator = Comparator.comparing(TipoArchivoDto::getIdGrupoTipoArchivo)
-				.thenComparing(TipoArchivoDto::getCodigo);
-
-		val entities = getRepository().findAllByActivo(true);
-		val result = asModels(entities).stream().sorted(comparator).collect(toList());
-		return result;
-	}
-
 	@Override
 	public List<TipoArchivoDto> findAllByGrupoTipoArchivoId(long grupoTipoArchivo) {
 		val entities = getRepository().findAllByGrupoTipoArchivoId(grupoTipoArchivo);
 		val result = asModels(entities);
+		return result;
+	}
+
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	@Override
+	public List<TipoArchivoDto> findAllByAplicacion(String aplicacion) {
+		val comparator = Comparator.comparing(TipoArchivoDto::getIdGrupoTipoArchivo)
+				.thenComparing(TipoArchivoDto::getCodigo);
+
+		val entities = getRepository().findAllByAplicacionAndActivo(aplicacion, true);
+		val result = asModels(entities).stream().sorted(comparator).collect(toList());
 		return result;
 	}
 }

@@ -13,6 +13,7 @@ import com.egakat.integration.config.archivos.client.service.api.TipoArchivoLoca
 import com.egakat.integration.config.archivos.constants.RestConstants;
 import com.egakat.integration.config.archivos.dto.CampoDto;
 import com.egakat.integration.config.archivos.dto.DirectorioDto;
+import com.egakat.integration.config.archivos.dto.DirectorioObservableDto;
 import com.egakat.integration.config.archivos.dto.LlaveDto;
 import com.egakat.integration.config.archivos.dto.TipoArchivoDto;
 import com.egakat.integration.config.properties.IntegrationConfigRestProperties;
@@ -47,10 +48,8 @@ public class TipoArchivoLocalServiceImpl extends LocalQueryServiceImpl<TipoArchi
 	}
 
 	@Override
-	public List<TipoArchivoDto> findAllActivos() {
-		val response = getRestClient().getAllQuery(getResourcePath(), "", getArrayReponseType());
-		val result = asList(response.getBody());
-		return result;
+	public TipoArchivoDto findOneById(Long id) {
+		return super.findOneById(id);
 	}
 
 	@Override
@@ -59,6 +58,15 @@ public class TipoArchivoLocalServiceImpl extends LocalQueryServiceImpl<TipoArchi
 
 		val response = getRestClient().getOneQuery(getResourcePath(), query, getResponseType(), codigo);
 		val result = response.getBody();
+		return result;
+	}
+
+	@Override
+	public List<TipoArchivoDto> findAllByAplicacion(String aplicacion) {
+		val query = "?aplicacion={aplicacion}";
+
+		val response = getRestClient().getAllQuery(getResourcePath(), query, getArrayReponseType(), aplicacion);
+		val result = asList(response.getBody());
 		return result;
 	}
 
@@ -81,11 +89,26 @@ public class TipoArchivoLocalServiceImpl extends LocalQueryServiceImpl<TipoArchi
 	}
 
 	@Override
-	public DirectorioDto findOneDirectorioByTipoArchivo(long tipoArchivo) {
-		val query = RestConstants.directorioByTipoArchivo;
+	public List<DirectorioDto> findAllDirectoriosByTipoArchivo(long tipoArchivo) {
+		val query = RestConstants.directoriosByTipoArchivo;
 
-		val response = getRestClient().getOneQuery(getResourcePath(), query, DirectorioDto.class, tipoArchivo);
-		val result = response.getBody();
+		val response = getRestClient().getAllQuery(getResourcePath(), query, DirectorioDto[].class, tipoArchivo);
+		val result = asList(response.getBody());
 		return result;
+	}
+
+	@Override
+	public List<DirectorioObservableDto> findAllDirectoriosObservablesByTipoArchivo(long tipoArchivo) {
+		val query = RestConstants.directoriosObservablesByTipoArchivo;
+
+		val response = getRestClient().getAllQuery(getResourcePath(), query, DirectorioObservableDto[].class,
+				tipoArchivo);
+		val result = asList(response.getBody());
+		return result;
+	}
+
+	@Override
+	public void cacheEvict() {
+
 	}
 }

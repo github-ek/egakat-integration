@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.egakat.integration.files.watcher.service.api.WatchFileSystemService;
+import com.egakat.integration.files.watcher.service.api.FileSystemWatchService;
 
 @Component
 public class Tasks {
 
 	@Autowired
-	private WatchFileSystemService watcher;
+	private FileSystemWatchService watcher;
 
 	@Scheduled(cron = "${schedule.start}")
 	public void start() {

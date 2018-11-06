@@ -1,8 +1,6 @@
 package com.egakat.integration.config.mapas.client.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.properties.RestProperties;
@@ -39,13 +37,11 @@ public class MapaLocalServiceImpl extends LocalQueryServiceImpl<MapaDto, Long> i
 		return MapaDto[].class;
 	}
 
-	@Cacheable(cacheNames = "mapa-by-id", sync = true, unless = "#result == null")
 	@Override
 	public MapaDto findOneById(Long id) {
 		return super.findOneById(id);
 	}
 
-	@Cacheable(cacheNames = "mapas-valores", sync = true, unless = "#result == null")
 	@Override
 	public String findMapaValorByMapaIdAndMapaClave(Long idMapa, String mapaClave) {
 		String result = null;
@@ -56,7 +52,6 @@ public class MapaLocalServiceImpl extends LocalQueryServiceImpl<MapaDto, Long> i
 		return result;
 	}
 
-	@CacheEvict(cacheNames = { "mapa-by-id", "mapas-valores" }, allEntries = true)
 	@Override
 	public void cacheEvict() {
 

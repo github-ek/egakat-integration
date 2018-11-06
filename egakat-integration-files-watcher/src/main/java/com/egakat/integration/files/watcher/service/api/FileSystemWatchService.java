@@ -1,6 +1,6 @@
 package com.egakat.integration.files.watcher.service.api;
 
-public interface WatchFileSystemService {
+public interface FileSystemWatchService {
 
 	boolean isRunning();
 

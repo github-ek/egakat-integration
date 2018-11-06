@@ -2,30 +2,43 @@ package com.egakat.integration.config.archivos.client.service.api;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
+import com.egakat.core.web.client.service.api.CacheEvictSupported;
 import com.egakat.core.web.client.service.api.LocalQueryService;
 import com.egakat.integration.config.archivos.dto.CampoDto;
 import com.egakat.integration.config.archivos.dto.DirectorioDto;
+import com.egakat.integration.config.archivos.dto.DirectorioObservableDto;
 import com.egakat.integration.config.archivos.dto.LlaveDto;
 import com.egakat.integration.config.archivos.dto.TipoArchivoDto;
 
-public interface TipoArchivoLocalService extends LocalQueryService<TipoArchivoDto, Long> {
+public interface TipoArchivoLocalService extends LocalQueryService<TipoArchivoDto, Long>, CacheEvictSupported {
 
-	List<TipoArchivoDto> findAllActivos();
-
-	@Cacheable(cacheNames = "tipo-archivo-by-id", sync = true)
+	@Cacheable(cacheNames = "tipo-archivo-by-id", sync = true, unless = "#result == null")
 	TipoArchivoDto findOneById(Long id);
 
-	@Cacheable(cacheNames = "tipo-archivo-by-codigo", sync = true)
+	@Cacheable(cacheNames = "tipo-archivo-by-codigo", sync = true, unless = "#result == null")
 	TipoArchivoDto findOneByCodigo(String codigo);
 
-	@Cacheable(cacheNames = "campos-by-tiposArchivoId", sync = true)
+	@Cacheable(cacheNames = "tipos-archivo-by-aplicacion", sync = true, unless = "#result == null")
+	List<TipoArchivoDto> findAllByAplicacion(String aplicacion);
+
+	@Cacheable(cacheNames = "campos-by-tipo-archivo", sync = true, unless = "#result == null")
 	List<CampoDto> findAllCamposByTipoArchivo(long id);
 
-	@Cacheable(cacheNames = "llaves-by-tiposArchivoId", sync = true)
+	@Cacheable(cacheNames = "llaves-by-tipo-archivo", sync = true, unless = "#result == null")
 	List<LlaveDto> findAllLlavesByTipoArchivo(long id);
 
-	@Cacheable(cacheNames = "directorio-by-tiposArchivoId", sync = true)
-	DirectorioDto findOneDirectorioByTipoArchivo(long id);
+	@Cacheable(cacheNames = "directorios-by-tipo-archivo", sync = true, unless = "#result == null")
+	List<DirectorioDto> findAllDirectoriosByTipoArchivo(long id);
+
+	@Cacheable(cacheNames = "directorios-observables-by-tipo-archivo", sync = true, unless = "#result == null")
+	List<DirectorioObservableDto> findAllDirectoriosObservablesByTipoArchivo(long id);
+
+	@CacheEvict(cacheNames = { "tipo-archivo-by-id", "tipo-archivo-by-codigo", "tipos-archivo-by-aplicacion",
+			"campos-by-tipo-archivo", "llaves-by-tipo-archivo", "directorios-by-tipo-archivo",
+			"directorios-observables-by-tipo-archivo" }, allEntries = true)
+	void cacheEvict();
+
 }

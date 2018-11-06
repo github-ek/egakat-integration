@@ -14,5 +14,7 @@ public class RestConstants {
 
 	final public static String llavesByTipoArchivo = "/{id}/llaves";
 
-	final public static String directorioByTipoArchivo = "/{id}/directorios";
+	final public static String directoriosByTipoArchivo = "/{id}/directorios";
+	
+	final public static String directoriosObservablesByTipoArchivo = "/{id}/directorios-observables";
 }

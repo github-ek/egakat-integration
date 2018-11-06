@@ -16,6 +16,7 @@ import com.egakat.core.web.api.controllers.NotFoundException;
 import com.egakat.integration.config.archivos.constants.RestConstants;
 import com.egakat.integration.config.archivos.dto.CampoDto;
 import com.egakat.integration.config.archivos.dto.DirectorioDto;
+import com.egakat.integration.config.archivos.dto.DirectorioObservableDto;
 import com.egakat.integration.config.archivos.dto.LlaveDto;
 import com.egakat.integration.config.archivos.dto.TipoArchivoDto;
 import com.egakat.integration.config.archivos.service.api.CampoCrudService;
@@ -46,14 +47,8 @@ public class TipoArchivoRestCrudController extends CrudRestController<TipoArchiv
 		return service;
 	}
 
-	@GetMapping(PATH_LIST)
-	public ResponseEntity<List<TipoArchivoDto>> get() {
-		val result = getService().findAllActivos();
-		return ResponseEntity.ok(result);
-	}
-
 	@GetMapping(params = { "codigo" })
-	public ResponseEntity<TipoArchivoDto> get(@RequestParam String codigo) {
+	public ResponseEntity<TipoArchivoDto> getByCodigo(@RequestParam String codigo) {
 		val result = getService().findByCodigo(codigo);
 
 		if (!result.isPresent()) {
@@ -63,21 +58,33 @@ public class TipoArchivoRestCrudController extends CrudRestController<TipoArchiv
 		return ResponseEntity.ok(result.get());
 	}
 
+	@GetMapping(params = { "aplicacion" })
+	public ResponseEntity<List<TipoArchivoDto>> getByAplicacion(@RequestParam String aplication) {
+		val result = getService().findAllByAplicacion(aplication);
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping(RestConstants.camposByTipoArchivo)
 	public ResponseEntity<List<CampoDto>> getCampos(@PathVariable long id) {
 		val result = camposService.findAllByTipoArchivoId(id);
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping(RestConstants.directorioByTipoArchivo)
+	@GetMapping(RestConstants.llavesByTipoArchivo)
+	public ResponseEntity<List<LlaveDto>> getLlaves(@PathVariable long id) {
+		val result = llavesService.findAllByTipoArchivoId(id);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping(RestConstants.directoriosByTipoArchivo)
 	public ResponseEntity<List<DirectorioDto>> getDirectorios(@PathVariable long id) {
 		val result = directoriosService.findAllByTipoArchivoId(id);
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping(RestConstants.llavesByTipoArchivo)
-	public ResponseEntity<List<LlaveDto>> getLlaves(@PathVariable long id) {
-		val result = llavesService.findAllByTipoArchivoId(id);
+	@GetMapping(RestConstants.directoriosObservablesByTipoArchivo)
+	public ResponseEntity<List<DirectorioObservableDto>> getDirectoriosObservables(@PathVariable long id) {
+		val result = directoriosService.findAllObservablesByTipoArchivoId(id);
 		return ResponseEntity.ok(result);
 	}
 }

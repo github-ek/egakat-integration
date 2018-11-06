@@ -33,9 +33,9 @@ import org.springframework.stereotype.Service;
 import com.egakat.integration.commons.archivos.dto.ArchivoDto;
 import com.egakat.integration.commons.archivos.enums.EstadoArchivoType;
 import com.egakat.integration.commons.archivos.service.api.ArchivoCrudService;
-import com.egakat.integration.commons.tiposarchivo.dto.DirectorioDto;
-import com.egakat.integration.commons.tiposarchivos.service.api.TipoArchivoCrudService;
-import com.egakat.integration.files.watcher.service.api.WatchFileSystemService;
+import com.egakat.integration.config.archivos.client.service.api.TipoArchivoLocalService;
+import com.egakat.integration.config.archivos.dto.DirectorioObservableDto;
+import com.egakat.integration.files.watcher.service.api.FileSystemWatchService;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -45,17 +45,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class WatchFileSystemServiceImpl implements WatchFileSystemService {
+public class WatchFileSystemServiceImpl implements FileSystemWatchService {
 
 	@Autowired
-	private TipoArchivoCrudService tipoArchivoService;
-
-	@Autowired
-	private ArchivoCrudService archivoService;
+	private TipoArchivoLocalService tipoArchivoService;
 
 	private WatchService watcher;
 
-	private Map<WatchKey, DirectorioDto> keys;
+	private Map<WatchKey, DirectorioObservableDto> keys;
+
+	@Autowired
+	private ArchivoCrudService archivoService;
 
 	@Getter
 	@Setter(AccessLevel.PROTECTED)
@@ -63,8 +63,7 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 
 	@Override
 	public void start() {
-		if (this.setup()) {
-
+		if (this.register()) {
 			for (; this.isRunning();) {
 				waitForSignal();
 
@@ -79,40 +78,15 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 	@Override
 	public void stop() {
 		if (isRunning()) {
-			val watchKeys = this.keys.keySet();
-			for (WatchKey watchKey : watchKeys) {
-				watchKey.cancel();
-			}
-			this.keys.clear();
-
-			try {
-				watcher.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				;
-			}
-
+			unregister();
 			setRunning(false);
 		}
 	}
 
-	protected void reset() throws IOException {
-		if (this.watcher != null) {
-			try {
-				this.watcher.close();
-			} catch (IOException e) {
-				log.error("this.watcher.close()", e);
-			}
-		}
-		this.watcher = FileSystems.getDefault().newWatchService();
-		this.keys = new HashMap<>();
-		this.running = false;
-	}
-
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------
-	// -- Setup
+	// -- Register
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------
-	protected boolean setup() {
+	protected boolean register() {
 		this.setRunning(false);
 		try {
 			this.reset();
@@ -131,8 +105,9 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 		for (val tipoArchivo : tiposArchivo) {
 			log.info("Registrando los directorios del tipo de archivo {}", tipoArchivo.getCodigo());
 
-			//val directorio = tipoArchivoService.findOneDirectorioByTipoArchivo(tipoArchivo.getId());
-			//register(directorio);
+			// val directorio =
+			// tipoArchivoService.findOneDirectorioByTipoArchivo(tipoArchivo.getId());
+			// register(directorio);
 		}
 
 		this.setRunning(true);
@@ -140,27 +115,55 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 		return true;
 	}
 
-	protected void register(DirectorioDto directorio) {
+	protected void reset() throws IOException {
+		if (this.watcher != null) {
+			try {
+				this.watcher.close();
+			} catch (IOException e) {
+				log.error("this.watcher.close()", e);
+			}
+		}
+		this.watcher = FileSystems.getDefault().newWatchService();
+		this.keys = new HashMap<>();
+		this.running = false;
+	}
+
+	protected void unregister() {
+		val watchKeys = this.keys.keySet();
+		for (WatchKey watchKey : watchKeys) {
+			watchKey.cancel();
+		}
+		this.keys.clear();
+
+		try {
+			watcher.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			;
+		}
+	}
+
+	protected void register(DirectorioObservableDto directorio) {
 		if (directorio == null) {
 			return;
 		}
 
-		log.info("Registrando el directorio {} ", directorio.getSubdirectorioEntradas());
-		tryCreateDirectory(directorio.getSubdirectorioEntradas());
-		tryCreateDirectory(directorio.getSubdirectorioTemporal());
-		tryCreateDirectory(directorio.getSubdirectorioDump());
-		tryCreateDirectory(directorio.getSubdirectorioProcesados());
-		tryCreateDirectory(directorio.getSubdirectorioErrores());
-		tryCreateDirectory(directorio.getSubdirectorioSalidas());
+		log.info("Registrando el directorio {} ", directorio.getDirectorioEntradas());
+		tryCreateDirectory(directorio.getDirectorioEntradas());
+		tryCreateDirectory(directorio.getDirectorioTemporal());
+		tryCreateDirectory(directorio.getDirectorioDump());
+		tryCreateDirectory(directorio.getDirectorioProcesados());
+		tryCreateDirectory(directorio.getDirectorioErrores());
+		tryCreateDirectory(directorio.getDirectorioSalidas());
 
-		val path = Paths.get(directorio.getSubdirectorioEntradas());
+		val path = Paths.get(directorio.getDirectorioEntradas());
 		processDirectory(directorio, path);
 
 		try {
 			WatchKey key = path.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
 			keys.put(key, directorio);
 		} catch (IOException e) {
-			log.error("No se pudo registrar el directorio {}:", directorio.getSubdirectorioEntradas(), e.getMessage());
+			log.error("No se pudo registrar el directorio {}:", directorio.getDirectorioEntradas(), e.getMessage());
 		} catch (ClosedWatchServiceException e) {
 			throw e;
 		}
@@ -220,7 +223,7 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 		return result;
 	}
 
-	protected boolean pollEvents(WatchEvent<?> event, Path watchable, DirectorioDto directorio) {
+	protected boolean pollEvents(WatchEvent<?> event, Path watchable, DirectorioObservableDto directorio) {
 		@SuppressWarnings("rawtypes")
 		WatchEvent.Kind kind = event.kind();
 
@@ -256,12 +259,12 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss");
 
-	private void processFile(DirectorioDto directorio, Path pathOrigen) {
+	private void processFile(DirectorioObservableDto directorio, Path pathOrigen) {
 		val now = LocalDateTime.now().format(formatter);
 
 		String fileName = now + "_" + pathOrigen.getFileName().toString();
 
-		Path pathDestino = Paths.get(directorio.getSubdirectorioTemporal()).resolve(fileName);
+		Path pathDestino = Paths.get(directorio.getDirectorioTemporal()).resolve(fileName);
 
 		boolean test = test(pathOrigen);
 		// -------------------------------------------------------------------------------------------
@@ -329,7 +332,7 @@ public class WatchFileSystemServiceImpl implements WatchFileSystemService {
 		return Timestamp.from(Instant.ofEpochMilli(lastModifiedBefore)).toLocalDateTime();
 	}
 
-	private void processDirectory(DirectorioDto directorio, Path dir) {
+	private void processDirectory(DirectorioObservableDto directorio, Path dir) {
 		log.debug("Procesando directorio {}", dir.toString());
 
 		try (val stream = getFiles(dir)) {

@@ -46,6 +46,9 @@ public class TipoArchivoDto extends AuditableEntityDto<Long>
 	@Size(max = 4)
 	private String separadorCampos;
 
+	@Size(max = 200)
+	private String aplicacion;
+	
 	@NumberFormat
 	private int ordinal;
 

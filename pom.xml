@@ -103,6 +103,11 @@
 				<artifactId>egakat-core-web-client</artifactId>
 				<version>${egakat.core.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-e-connect-config-client</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>

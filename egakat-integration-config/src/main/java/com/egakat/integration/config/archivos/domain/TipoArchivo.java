@@ -66,6 +66,9 @@ public class TipoArchivo extends AuditableEntity<Long>
 	@Size(max = 4)
 	@Column(name = "separador_campos")
 	private String separadorCampos;
+	
+	@Size(max = 200)
+	private String aplicacion;
 
 	@NumberFormat
 	private int ordinal;
