@@ -7,8 +7,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
+import com.egakat.integration.components.IntegrationConfigRestClient;
 import com.egakat.integration.config.archivos.client.service.api.TipoArchivoLocalService;
 import com.egakat.integration.config.archivos.constants.RestConstants;
 import com.egakat.integration.config.archivos.dto.CampoDto;
@@ -16,7 +18,7 @@ import com.egakat.integration.config.archivos.dto.DirectorioDto;
 import com.egakat.integration.config.archivos.dto.DirectorioObservableDto;
 import com.egakat.integration.config.archivos.dto.LlaveDto;
 import com.egakat.integration.config.archivos.dto.TipoArchivoDto;
-import com.egakat.integration.config.properties.IntegrationConfigRestProperties;
+import com.egakat.integration.properties.IntegrationConfigRestProperties;
 
 import lombok.val;
 
@@ -27,9 +29,16 @@ public class TipoArchivoLocalServiceImpl extends LocalQueryServiceImpl<TipoArchi
 	@Autowired
 	private IntegrationConfigRestProperties properties;
 
-	@Override
+	@Autowired
+	private IntegrationConfigRestClient restClient;
+
 	protected RestProperties getProperties() {
 		return properties;
+	}
+
+	@Override
+	protected RestClient getRestClient() {
+		return restClient;
 	}
 
 	@Override

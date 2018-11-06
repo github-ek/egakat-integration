@@ -71,15 +71,6 @@ public class WatchFileSystemServiceImpl implements FileSystemWatchService {
 					this.stop();
 				}
 			}
-
-		}
-	}
-
-	@Override
-	public void stop() {
-		if (isRunning()) {
-			unregister();
-			setRunning(false);
 		}
 	}
 
@@ -96,7 +87,7 @@ public class WatchFileSystemServiceImpl implements FileSystemWatchService {
 		}
 
 		// @formatter:off
-		val tiposArchivo = tipoArchivoService.findAllActivos()
+		val tiposArchivo = tipoArchivoService.findAllByAplicacion("")
 				.stream()
 				.filter(a -> a.isActivo())
 				.collect(toList());
@@ -105,9 +96,10 @@ public class WatchFileSystemServiceImpl implements FileSystemWatchService {
 		for (val tipoArchivo : tiposArchivo) {
 			log.info("Registrando los directorios del tipo de archivo {}", tipoArchivo.getCodigo());
 
-			// val directorio =
-			// tipoArchivoService.findOneDirectorioByTipoArchivo(tipoArchivo.getId());
-			// register(directorio);
+			val directorios = tipoArchivoService.findAllDirectoriosObservablesByTipoArchivo(tipoArchivo.getId());
+			for (val directorio : directorios) {
+				register(directorio);
+			}
 		}
 
 		this.setRunning(true);
@@ -363,5 +355,13 @@ public class WatchFileSystemServiceImpl implements FileSystemWatchService {
 				return (Files.isRegularFile(path));
 			}
 		};
+	}
+
+	@Override
+	public void stop() {
+		if (isRunning()) {
+			unregister();
+			setRunning(false);
+		}
 	}
 }

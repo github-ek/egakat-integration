@@ -9,13 +9,15 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
+import com.egakat.integration.components.IntegrationConfigRestClient;
 import com.egakat.integration.config.mapas.client.service.api.GrupoMapaLocalService;
 import com.egakat.integration.config.mapas.constants.RestConstants;
 import com.egakat.integration.config.mapas.dto.GrupoMapaDto;
 import com.egakat.integration.config.mapas.dto.MapaDto;
-import com.egakat.integration.config.properties.IntegrationConfigRestProperties;
+import com.egakat.integration.properties.IntegrationConfigRestProperties;
 
 import lombok.val;
 
@@ -26,8 +28,16 @@ public class GrupoMapaLocalServiceImpl extends LocalQueryServiceImpl<GrupoMapaDt
 	@Autowired
 	private IntegrationConfigRestProperties properties;
 
+	@Autowired
+	private IntegrationConfigRestClient restClient;
+
 	protected RestProperties getProperties() {
 		return properties;
+	}
+
+	@Override
+	protected RestClient getRestClient() {
+		return restClient;
 	}
 
 	@Override

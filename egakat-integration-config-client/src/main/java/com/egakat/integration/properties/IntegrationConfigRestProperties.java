@@ -1,4 +1,4 @@
-package com.egakat.integration.config.properties;
+package com.egakat.integration.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +17,7 @@ import lombok.ToString;
 @Validated
 public class IntegrationConfigRestProperties implements RestProperties {
 
-	static final String CONFIGURATION_PROPERTIES = "endpoint.integration.config.rest";
+	static final String CONFIGURATION_PROPERTIES = "endpoint.integration.config";
 	
 	private String basePath;
 	
