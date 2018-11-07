@@ -9,10 +9,10 @@ import com.egakat.integration.config.mapas.dto.MapaDto;
 
 public interface MapaLocalService extends LocalQueryService<MapaDto, Long>, CacheEvictSupported {
 
-	@Cacheable(cacheNames = "mapa-by-id", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "mapa-by-id", unless = "#result == null")
 	MapaDto findOneById(Long id);
 
-	@Cacheable(cacheNames = "mapas-valores", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "mapas-valores", unless = "#result == null")
 	String findMapaValorByMapaIdAndMapaClave(Long idMapa, String mapaClave);
 
 	@CacheEvict(cacheNames = { "mapa-by-id", "mapas-valores" }, allEntries = true)

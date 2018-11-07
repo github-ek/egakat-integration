@@ -15,25 +15,25 @@ import com.egakat.integration.config.archivos.dto.TipoArchivoDto;
 
 public interface TipoArchivoLocalService extends LocalQueryService<TipoArchivoDto, Long>, CacheEvictSupported {
 
-	@Cacheable(cacheNames = "tipo-archivo-by-id", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "tipo-archivo-by-id", unless = "#result == null")
 	TipoArchivoDto findOneById(Long id);
 
-	@Cacheable(cacheNames = "tipo-archivo-by-codigo", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "tipo-archivo-by-codigo", unless = "#result == null")
 	TipoArchivoDto findOneByCodigo(String codigo);
 
-	@Cacheable(cacheNames = "tipos-archivo-by-aplicacion", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "tipos-archivo-by-aplicacion", unless = "#result == null")
 	List<TipoArchivoDto> findAllByAplicacion(String aplicacion);
 
-	@Cacheable(cacheNames = "campos-by-tipo-archivo", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "campos-by-tipo-archivo", unless = "#result == null")
 	List<CampoDto> findAllCamposByTipoArchivo(long id);
 
-	@Cacheable(cacheNames = "llaves-by-tipo-archivo", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "llaves-by-tipo-archivo", unless = "#result == null")
 	List<LlaveDto> findAllLlavesByTipoArchivo(long id);
 
-	@Cacheable(cacheNames = "directorios-by-tipo-archivo", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "directorios-by-tipo-archivo", unless = "#result == null")
 	List<DirectorioDto> findAllDirectoriosByTipoArchivo(long id);
 
-	@Cacheable(cacheNames = "directorios-observables-by-tipo-archivo", sync = true, unless = "#result == null")
+	@Cacheable(cacheNames = "directorios-observables-by-tipo-archivo", unless = "#result == null")
 	List<DirectorioObservableDto> findAllDirectoriosObservablesByTipoArchivo(long id);
 
 	@CacheEvict(cacheNames = { "tipo-archivo-by-id", "tipo-archivo-by-codigo", "tipos-archivo-by-aplicacion",
