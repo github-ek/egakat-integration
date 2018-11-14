@@ -118,5 +118,7 @@
 		<module>egakat-integration-config</module>
 		<module>egakat-integration-config-dto</module>
 		<module>egakat-integration-config-client</module>
+		<module>egakat-integration-core</module>
+		<module>egakat-integration-core-dto</module>
 	</modules>
 </project>
