@@ -78,7 +78,7 @@ abstract public class PushServiceImpl<O, R> implements PushService {
 	protected void updateOnError(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
 		getActualizacionesService().update(actualizacion, actualizacion.getEstadoIntegracion(), errores);
 	}
-	
+
 	protected boolean shouldBeRetried(RuntimeException e, ActualizacionDto actualizacion) {
 		boolean result = false;
 

@@ -53,10 +53,9 @@ abstract public class PullServiceImpl<I> implements PullService {
 			enqueue(input, actualizacion, errores);
 
 			if (!errores.isEmpty()) {
-				onError(input, actualizacion, errores);
-
 				try {
-					getActualizacionesService().update(actualizacion, EstadoIntegracionType.ERROR_ESTRUCTURA, errores);
+					onError(input, actualizacion, errores);
+					updateOnError(actualizacion, errores);
 				} catch (RuntimeException e) {
 					log.error("Exception:", e);
 				}
@@ -68,16 +67,17 @@ abstract public class PullServiceImpl<I> implements PullService {
 
 	protected void enqueue(I input, ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
 		try {
-			validate(input, actualizacion, errores);
+			validateInput(input, actualizacion, errores);
 
 			if (errores.isEmpty()) {
-				val discard = discard(input, actualizacion);
+				val discard = shouldBeDiscarded(input, actualizacion);
 
 				if (!discard) {
 					onSuccess(input, actualizacion);
-					getActualizacionesService().enqueue(actualizacion);
+					updateOnSuccess(input, actualizacion);
 				} else {
 					onDiscard(input, actualizacion);
+					updateOnDiscard(input, actualizacion);
 				}
 			}
 		} catch (RuntimeException e) {
@@ -88,11 +88,11 @@ abstract public class PullServiceImpl<I> implements PullService {
 
 	abstract protected ActualizacionDto asModel(String correlacion, I input);
 
-	protected void validate(I input, ActualizacionDto model, List<ErrorIntegracionDto> errores) {
+	protected void validateInput(I input, ActualizacionDto model, List<ErrorIntegracionDto> errores) {
 
 	}
 
-	protected boolean discard(I input, ActualizacionDto model) {
+	protected boolean shouldBeDiscarded(I input, ActualizacionDto model) {
 		return false;
 	}
 
@@ -100,16 +100,31 @@ abstract public class PullServiceImpl<I> implements PullService {
 
 	}
 
+	protected void updateOnSuccess(I input, ActualizacionDto actualizacion) {
+		getActualizacionesService().enqueue(actualizacion);
+	}
+
 	protected void onDiscard(I input, ActualizacionDto model) {
 
 	}
 
-	protected void onError(I input, ActualizacionDto model, List<ErrorIntegracionDto> errores) {
+	protected void updateOnDiscard(I input, ActualizacionDto actualizacion) {
 
 	}
 
+	protected void onError(I input, ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
+		actualizacion.setEstadoIntegracion(EstadoIntegracionType.ERROR_ESTRUCTURA);
+		actualizacion.setReintentos(0);
+	}
+
+	protected void updateOnError(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
+		getActualizacionesService().update(actualizacion, actualizacion.getEstadoIntegracion(), errores);
+	}
+
 	protected void log(ActualizacionDto a, int i, int n) {
-		val format = "integracion={}, correlacion={}, id externo={}: {} de {}.";
-		log.debug(format, a.getIntegracion(), a.getCorrelacion(), a.getIdExterno(), i, n);
+		if (a != null) {
+			val format = "integracion={}, correlacion={}, id externo={}: {} de {}.";
+			log.debug(format, a.getIntegracion(), a.getCorrelacion(), a.getIdExterno(), i, n);
+		}
 	}
 }

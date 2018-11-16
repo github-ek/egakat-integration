@@ -3,10 +3,12 @@ package com.egakat.io.core.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import com.egakat.integration.config.mapas.dto.MapaDto;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.dto.IntegracionEntityDto;
@@ -147,6 +149,51 @@ abstract public class MapServiceImpl<M extends IntegracionEntityDto> implements 
 
 	protected int getNumeroMaximoIntentos() {
 		return 30;
+	}
+
+	protected String defaultKey(String _default) {
+		return StringUtils.defaultString(_default).toUpperCase();
+	}
+
+	protected String getValueFromMapOrDefault(Long id, String _default) {
+		String result = _default;
+		if (id != null) {
+			val mapa = getMapa(id);
+			if (mapa != null) {
+				val value = mapa.getValores().get(_default);
+				if (value != null) {
+					result = value;
+				}
+			}
+		}
+		return result;
+	}
+
+	protected MapaDto getMapa(Long id) {
+		return null;
+	}
+
+	protected ErrorIntegracionDto errorAtributoRequeridoNoSuministrado(IntegracionEntityDto model, String codigo,
+			String... arg) {
+		val mensaje = "Este atributo no admite valores nulos o vacios";
+		val result = getErroresService().error(model, codigo, mensaje, arg);
+		return result;
+	}
+
+	protected ErrorIntegracionDto errorAtributoNoHomologado(IntegracionEntityDto model, String codigo, String valor,
+			String... arg) {
+		val format = "Este atributo requiere ser homologado. Contiene el valor [%s], pero este valor no pudo ser homologado.";
+		val mensaje = String.format(format, valor);
+		val result = getErroresService().error(model, codigo, mensaje, arg);
+		return result;
+	}
+
+	protected ErrorIntegracionDto errorAtributoMapeableNoHomologado(IntegracionEntityDto model, String codigo,
+			String valor, long idMapa, String... arg) {
+		val format = "Este atributo esta asociado al mapa de homologación con id=%d.Verifique que el valor [%s] exista en dicho mapa.";
+		val mensaje = String.format(format, idMapa, valor);
+		val result = getErroresService().error(model, codigo, mensaje, arg);
+		return result;
 	}
 
 	protected void log(ActualizacionDto a, int i, int n) {

@@ -28,7 +28,7 @@ public class SuscripcionDto extends SimpleAuditableEntityDto<Long> {
 
 	@Size(max = 50)
 	@NotNull
-	private String estadoIntegracion;
+	private String estadoSuscripcion;
 
 	@Size(max = 100)
 	private String arg0;

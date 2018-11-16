@@ -31,7 +31,7 @@ public class SuscripcionCrudServiceImpl extends CrudServiceImpl<SuscripcionEntit
 		model.setId(entity.getId());
 		model.setSuscripcion(entity.getSuscripcion());
 		model.setIdExterno(entity.getIdExterno());
-		model.setEstadoIntegracion(entity.getEstadoIntegracion());
+		model.setEstadoSuscripcion(entity.getEstadoSuscripcion());
 		
 		model.setArg0(entity.getArg0());
 		model.setArg1(entity.getArg1());
@@ -56,7 +56,7 @@ public class SuscripcionCrudServiceImpl extends CrudServiceImpl<SuscripcionEntit
 	protected SuscripcionEntity mergeEntity(SuscripcionDto model, SuscripcionEntity entity) {
 		entity.setSuscripcion(model.getSuscripcion());
 		entity.setIdExterno(model.getIdExterno());
-		entity.setEstadoIntegracion(model.getEstadoIntegracion());
+		entity.setEstadoSuscripcion(model.getEstadoSuscripcion());
 		
 		entity.setArg0(model.getArg0());
 		entity.setArg1(model.getArg1());

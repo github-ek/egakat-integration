@@ -151,6 +151,7 @@ abstract public class DownloadServiceImpl<I, M extends IntegracionEntityDto> imp
 
 	protected void onSuccess(I input, M model, ActualizacionDto actualizacion) {
 		actualizacion.setEstadoIntegracion(EstadoIntegracionType.ESTRUCTURA_VALIDA);
+		actualizacion.setSubEstadoIntegracion("");
 		actualizacion.setReintentos(0);
 	}
 

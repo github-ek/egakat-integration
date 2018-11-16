@@ -44,10 +44,10 @@ public class SuscripcionEntity extends SimpleAuditableEntity<Long> {
 	@Size(max = 100)
 	private String idExterno;
 
-	@Column(name = "estado_integracion", length = 50, nullable = false)
+	@Column(name = "estado_suscripcion", length = 50, nullable = false)
 	@Size(max = 50)
 	@NotNull
-	private String estadoIntegracion;
+	private String estadoSuscripcion;
 
 	@Column(name = "arg0", length = 100, nullable = true)
 	@Size(max = 100)
