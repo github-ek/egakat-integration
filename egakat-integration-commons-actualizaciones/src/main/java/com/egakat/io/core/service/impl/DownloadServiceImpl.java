@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import com.egakat.io.core.dto.ActualizacionDto;
@@ -116,7 +115,7 @@ abstract public class DownloadServiceImpl<I, M extends IntegracionEntityDto> imp
 			errores.add(error);
 
 			if (retry(e, actualizacion, errores)) {
-				actualizacion.setReintentos(actualizacion.getReintentos());
+				actualizacion.setReintentos(actualizacion.getReintentos() + 1);
 			}
 		}
 	}
@@ -141,8 +140,13 @@ abstract public class DownloadServiceImpl<I, M extends IntegracionEntityDto> imp
 		boolean result = false;
 
 		if (e instanceof HttpStatusCodeException) {
-			if (((HttpStatusCodeException) e).getStatusCode() == HttpStatus.GATEWAY_TIMEOUT) {
+			switch (((HttpStatusCodeException) e).getStatusCode()) {
+			case BAD_GATEWAY:
+			case GATEWAY_TIMEOUT:
 				result = true;
+				break;
+			default:
+				break;
 			}
 		}
 

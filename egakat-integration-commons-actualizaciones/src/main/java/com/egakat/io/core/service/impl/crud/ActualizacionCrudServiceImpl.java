@@ -178,10 +178,10 @@ public class ActualizacionCrudServiceImpl extends IntegracionEntityCrudServiceIm
 	public ActualizacionDto update(ActualizacionDto model, EstadoIntegracionType estado,
 			List<ErrorIntegracionDto> errores) {
 
-		if (!estado.isError()) {
-			val format = "Se esta intentado actualizar al estado %s. Esta operación no admite estados que no sean de error";
-			throw new RuntimeException(String.format(format, estado.toString()));
-		}
+		//if (!estado.isError()) {
+		//	val format = "Se esta intentado actualizar al estado %s. Esta operación no admite estados que no sean de error";
+		//	throw new RuntimeException(String.format(format, estado.toString()));
+		//}
 
 		if (errores.isEmpty()) {
 			throw new RuntimeException(

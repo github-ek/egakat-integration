@@ -5,7 +5,9 @@ import static org.apache.commons.lang3.StringUtils.left;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -155,6 +157,13 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 			val e = (HttpStatusCodeException) t;
 			c = e.getStatusCode().toString();
 			msg = e.getResponseBodyAsString();
+		}else {
+			if(t instanceof NestedRuntimeException) {
+				val e = (NestedRuntimeException)t;
+				if(e.getMostSpecificCause() !=null) {
+					msg = e.getMostSpecificCause().getMessage();
+				}
+			}
 		}
 
 		val result = error(integracion, correlacion, idExterno, c, msg);
@@ -172,7 +181,7 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 		result.setIdExterno(idExterno);
 		result.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
 		result.setCodigo(left(codigo, 100));
-		result.setMensaje(mensaje);
+		result.setMensaje(StringUtils.defaultString(mensaje));
 		result.setArg0(argumentos[0]);
 		result.setArg1(argumentos[1]);
 		result.setArg2(argumentos[2]);
