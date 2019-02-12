@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.integration.commons.archivos.domain.Registro;
 import com.egakat.integration.commons.archivos.dto.ArchivoDto;
-import com.egakat.integration.commons.tiposarchivos.service.api.CampoCrudService;
-import com.egakat.integration.commons.tiposarchivos.service.api.DirectorioCrudService;
-import com.egakat.integration.commons.tiposarchivos.service.api.LlaveCrudService;
-import com.egakat.integration.commons.tiposarchivos.service.api.TipoArchivoCrudService;
-import com.egakat.integration.config.archivos.dto.EtlRequestDto;
+import com.egakat.integration.commons.archivos.dto.EtlRequestDto;
+import com.egakat.integration.config.archivos.service.api.CampoCrudService;
+import com.egakat.integration.config.archivos.service.api.DirectorioCrudService;
+import com.egakat.integration.config.archivos.service.api.LlaveCrudService;
+import com.egakat.integration.config.archivos.service.api.TipoArchivoCrudService;
 import com.egakat.integration.core.files.components.Constantes;
 
 import lombok.val;

@@ -51,5 +51,10 @@
 			<groupId>com.egakat</groupId>
 			<artifactId>egakat-core-domain</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-integration-config-dto</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

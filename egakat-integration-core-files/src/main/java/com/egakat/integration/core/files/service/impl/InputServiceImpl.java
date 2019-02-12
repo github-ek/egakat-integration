@@ -14,16 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.egakat.integration.commons.archivos.domain.Registro;
 import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.dto.EtlRequestDto;
 import com.egakat.integration.commons.archivos.enums.EstadoArchivoType;
 import com.egakat.integration.commons.archivos.repository.RegistroRepository;
 import com.egakat.integration.commons.archivos.service.api.ArchivoCrudService;
-import com.egakat.integration.config.archivos.dto.EtlRequestDto;
 import com.egakat.integration.core.files.components.Constantes;
 import com.egakat.integration.core.files.components.decorators.CamposSplitterDecorator;
 import com.egakat.integration.core.files.components.decorators.CheckNumeroDeColumnasDecorator;
