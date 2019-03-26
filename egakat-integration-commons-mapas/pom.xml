@@ -4,20 +4,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>egakat-integration-commons-actualizaciones</artifactId>
+	<artifactId>egakat-integration-commons-mapas</artifactId>
 	<packaging>jar</packaging>
-	<name>egakat-integration-commons-actualizaciones</name>
+	<name>egakat-integration-commons-mapas</name>
 	<description></description>
 
 	<parent>
 		<groupId>com.egakat</groupId>
 		<artifactId>egakat-integration</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-		<!-- lookup parent from repository -->
+		<relativePath>..</relativePath> <!-- lookup parent from repository -->
 	</parent>
 
+
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -43,29 +44,23 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
+			<artifactId>commons-text</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.egakat</groupId>
-			<artifactId>egakat-core-services</artifactId>
+			<artifactId>egakat-core-web-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.egakat</groupId>
-			<artifactId>egakat-core-web-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>
-				egakat-integration-commons-actualizaciones-dto
-			</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>egakat-integration-commons-mapas</artifactId>
+			<artifactId>egakat-integration-commons-mapas-dto</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
