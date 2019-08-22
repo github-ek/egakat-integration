@@ -1,5 +1,6 @@
 package com.egakat.integration.service.impl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -246,4 +247,29 @@ abstract public class MapServiceImpl<I extends IntegracionEntityDto> implements 
 		val result = getErroresService().error(input, codigo, mensaje, arg);
 		return result;
 	}
+
+	protected ErrorIntegracionDto errorFechaPorDebajoDelMinimo(IntegracionEntityDto input, String codigo,
+			LocalDate valor, LocalDate minino) {
+		val format = "El valor de la fecha %s esta por debajo del valor minimo %s.";
+		val mensaje = String.format(format, valor.toString(), minino.toString());
+		val result = getErroresService().error(input, codigo, mensaje);
+		return result;
+	}
+
+	protected ErrorIntegracionDto errorFechaPorEncimaDelMaximo(IntegracionEntityDto input, String codigo,
+			LocalDate valor, LocalDate maximo) {
+		val format = "El valor de la fecha %s esta por encima del valor maximo %s.";
+		val mensaje = String.format(format, valor.toString(), maximo.toString());
+		val result = getErroresService().error(input, codigo, mensaje);
+		return result;
+	}
+
+	protected ErrorIntegracionDto errorNumeroPorDebajoDelMinimo(IntegracionEntityDto input, String codigo, int valor,
+			int minino, String... arg) {
+		val format = "El valor %d esta por debajo del valor minimo %d.";
+		val mensaje = String.format(format, valor, minino);
+		val result = getErroresService().error(input, codigo, mensaje, arg);
+		return result;
+	}
+
 }
