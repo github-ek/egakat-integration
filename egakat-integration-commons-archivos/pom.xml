@@ -57,5 +57,9 @@
 			<artifactId>egakat-integration-commons-archivos-dto</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-e-connect-config-client</artifactId>
+		</dependency>
 	</dependencies>
 </project>

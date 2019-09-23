@@ -113,21 +113,14 @@
 	<modules>
 		<module>egakat-integration-commons-actualizaciones</module>
 		<module>egakat-integration-commons-actualizaciones-dto</module>
-
-
-
-
-
-
-
-
-
-
-		
-		
 		<module>egakat-integration-commons-suscripciones</module>
 		<module>egakat-integration-commons-suscripciones-dto</module>
+		<module>egakat-integration-commons-archivos</module>
+		<module>egakat-integration-commons-archivos-dto</module>
 		<module>egakat-integration-commons-mapas</module>
 		<module>egakat-integration-commons-mapas-dto</module>
+		<module>egakat-integration-core-files</module>
+		
+		<module>egakat-integration-core-transformation</module>
 	</modules>
 </project>

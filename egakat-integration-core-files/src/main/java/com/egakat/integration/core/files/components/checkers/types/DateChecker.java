@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-import com.egakat.integration.config.archivos.dto.CampoDto;
-import com.egakat.integration.config.archivos.enums.DatoType;
+import com.egakat.integration.commons.archivos.dto.CampoDto;
+import com.egakat.integration.commons.archivos.enums.DatoType;
 import com.egakat.integration.core.files.components.checkers.CampoChecker;
 
 import lombok.val;

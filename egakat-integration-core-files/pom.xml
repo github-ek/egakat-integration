@@ -73,10 +73,5 @@
 			<artifactId>egakat-integration-commons-archivos</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>egakat-integration-config</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 </project>

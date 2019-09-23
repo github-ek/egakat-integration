@@ -31,7 +31,7 @@ import lombok.ToString;
 public class TipoArchivo extends AuditableEntity<Long> implements SortableObject, InactivableObject {
 
 	@Column(name = "id_grupo_tipo_archivo", nullable = false)
-	private long grupoTipoArchivoId;
+	private long idGrupoTipoArchivo;
 
 	@NotNull
 	@Column(unique = true)
