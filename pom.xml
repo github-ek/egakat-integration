@@ -25,7 +25,7 @@
 		<poi.version>3.17</poi.version>
 		<org.apache.any23.version>2.0</org.apache.any23.version>
 		<commons.text.version>1.1</commons.text.version>
-		<commons.lang3.version>3.7</commons.lang3.version>
+		<commons.lang3.version>3.18.0</commons.lang3.version>
 		<egakat.core.version>0.0.1-SNAPSHOT</egakat.core.version>
 		<egakat.connect.version>0.0.1-SNAPSHOT</egakat.connect.version>
 	</properties>
